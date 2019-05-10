@@ -125,6 +125,18 @@ void findLegalMoves(int x, int y, char chessTable[8][8], char legalMoves[8][8]){
 
 }
 
+//x i y su pozicije na kojima bi se nasla figura u narednom potezu (NE TRENUTNE!)
+int isKingAttacked(int x, int y, char chessTable[8][8], char figure){
+
+}
+
+//x i y su nove pozicije na kojima ce se naci figure, dok z i u su pozicije na kojima se ta figura nalazila
+//temp matrix ce simulirati situaciju sledeceg poteza, jer u chessTable nema validne podatke u tom trenutku
+//podesi tempMatrix na osnovu ulaznih podataka
+int isMyKingAttacked(int x, int y, int z, int u, char chessTable[8][8], char figure){
+	char tempMatrix[8][8];	
+}
+
 void markLegalMoves(char legalMoves[8][8]){
 
 }
@@ -198,8 +210,12 @@ void openField(int x, int y, char map[9][9]) {
 }
 
 
-void initTable(char table[8][8]){
+void initTableMatrix(char table[8][8]){
 
+
+}
+
+void drawTable(char table[8][8]){
 
 }
 
