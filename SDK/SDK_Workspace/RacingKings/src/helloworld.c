@@ -214,9 +214,36 @@ void openField(int x, int y, char map[9][9]) {
 }
 
 
-void initTableMatrix(char table[8][8]){
+void initTableMatrix(){
+	
+	//Polja se namestaju sa leva na desno, od gore ka dole
+	//Anuliranje praznih polja
+	int i,j;
+	for (i = 0; < 6; i++){
+		for(j = 0; j<8; j++){
+			chessTable[i][j] = 0;
+		}
+	}
 
+	//Namestanje figurica na pocetne polozaje
+	chessTable[6][0]=11;
+	chessTable[6][1]=13;
+	chessTable[6][2]=14;
+	chessTable[6][3]=15;
+	chessTable[6][4]=5;
+	chessTable[6][5]=4;
+	chessTable[6][6]=3;
+	chessTable[6][7]=1;
 
+	chessTable[7][0]=12;
+	chessTable[7][1]=13;
+	chessTable[7][2]=14;
+	chessTable[7][3]=15;
+	chessTable[7][4]=5;
+	chessTable[7][5]=4;
+	chessTable[7][6]=3;
+	chessTable[7][7]=2;
+	
 }
 
 void drawTable(char table[8][8]){
