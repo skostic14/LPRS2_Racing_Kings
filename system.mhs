@@ -33,8 +33,8 @@
 BEGIN vga_periph_mem
  PARAMETER INSTANCE = vga_periph_mem_0
  PARAMETER HW_VER = 1.00.a
- PARAMETER C_S_AXI_MEM0_BASEADDR = 0x74000000
- PARAMETER C_S_AXI_MEM0_HIGHADDR = 0x77ffffff
+ PARAMETER C_S_AXI_MEM0_BASEADDR = 0x78000000
+ PARAMETER C_S_AXI_MEM0_HIGHADDR = 0x7bffffff
  BUS_INTERFACE S_AXI = axi4lite_0
  PORT S_AXI_ACLK = clk_100_0000MHz
  PORT clk_i = vga_periph_0_clk_i
@@ -89,7 +89,7 @@ BEGIN lmb_bram_if_cntlr
  PARAMETER INSTANCE = microblaze_0_i_bram_ctrl
  PARAMETER HW_VER = 3.10.c
  PARAMETER C_BASEADDR = 0x00000000
- PARAMETER C_HIGHADDR = 0x0000FFFF
+ PARAMETER C_HIGHADDR = 0x0000ffff
  BUS_INTERFACE SLMB = microblaze_0_ilmb
  BUS_INTERFACE BRAM_PORT = microblaze_0_i_bram_ctrl_2_microblaze_0_bram_block
 END
@@ -105,7 +105,7 @@ BEGIN lmb_bram_if_cntlr
  PARAMETER INSTANCE = microblaze_0_d_bram_ctrl
  PARAMETER HW_VER = 3.10.c
  PARAMETER C_BASEADDR = 0x00000000
- PARAMETER C_HIGHADDR = 0x0000FFFF
+ PARAMETER C_HIGHADDR = 0x0000ffff
  BUS_INTERFACE SLMB = microblaze_0_dlmb
  BUS_INTERFACE BRAM_PORT = microblaze_0_d_bram_ctrl_2_microblaze_0_bram_block
 END

@@ -61,6 +61,8 @@
 #define NUMOFMINES 9
 //BEG---unpened field
 #define BEG '@'
+#define COL_WHITE 0x7C510C
+#define COL_BLACK 0xEAC78F
 
 int endOfGame;
 int inc1;
@@ -222,7 +224,33 @@ void drawTable(char table[8][8]){
 }
 
 void drawBackground(){
+	//Tekst RACING KINGS - (224, 10)
+	//Pocetak table - (120, 40)
+	//Polja 50x50
 
+	int x;
+	int y;
+	int i;
+	int j;
+	set_cursor(5);
+	unsigned char natpis[] = "RACING KINGS";
+	print_string(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR, natpis, 12);
+
+	for(i = 0; i < 8; i++){
+		for(j = 0; j < 8; j++){
+			for(x = 0; x < 50; x++){
+				for(y = 0; y < 50; y++){
+					// Koordinata: red*sirina + kolona
+					if((i+j)%2){
+						VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF + (j*50+y+40)*640+(120+i*50+x), COL_WHITE);
+					}
+					else{
+						VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF + (j*50+y+40)*640+(120+i*50+x), COL_BLACK);
+					}
+				}
+			}
+		}
+	}
 }
 
 //function that generates random game map
@@ -636,6 +664,7 @@ int main() {
 
 	init_platform();
 
+
 	//helping map for cleaning the table when blank button is pressed
 	for (p = 0; p < SIZE; p++) {
 		for (r = 0; r < SIZE; r++) {
@@ -677,7 +706,12 @@ int main() {
 		}
 	}
 
-	//drawing a map
+	while(1){
+		drawBackground();
+
+	}
+
+	/*//drawing a map
 	for (kolona = 0; kolona < 9; kolona++) {
 		for (red = 0; red < 9; red++) {
 			drawMap(80, 16, 80 + red * 16, 80 + kolona * 16, 16, 16);
@@ -694,7 +728,8 @@ int main() {
 	drawMap(116, 32, 168, 54, 14, 23);
 
 	//moving through the table
-	move();
+	move();*/
+
 
 	cleanup_platform();
 
