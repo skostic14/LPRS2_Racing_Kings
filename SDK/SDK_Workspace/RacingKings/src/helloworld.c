@@ -78,6 +78,8 @@ char blankMap[9][9];
 //map used for opening the blank fields that surround blank field selected
 char indicationMap[9][9];
 
+static char chessTable[8][8];
+
 //end of game
 //Rekonfigurisati da ispise ko je pobedio
 
@@ -219,6 +221,9 @@ void drawTable(char table[8][8]){
 
 }
 
+void drawBackground(){
+
+}
 
 //function that generates random game map
 void makeTable(char temp[9][9]) {
@@ -314,6 +319,7 @@ void makeTable(char temp[9][9]) {
 	}
 
 }
+
 
 //extracting pixel data from a picture for printing out on the display
 
