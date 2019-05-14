@@ -61,8 +61,8 @@
 #define NUMOFMINES 9
 //BEG---unpened field
 #define BEG '@'
-#define COL_WHITE 0x7C510C
-#define COL_BLACK 0xEAC78F
+#define COL_WHITE 0b011010000
+#define COL_BLACK 0b111110100
 
 int endOfGame;
 int inc1;
@@ -219,7 +219,7 @@ void initTableMatrix(){
 	//Polja se namestaju sa leva na desno, od gore ka dole
 	//Anuliranje praznih polja
 	int i,j;
-	for (i = 0; < 6; i++){
+	for (i = 0; i < 6; i++){
 		for(j = 0; j<8; j++){
 			chessTable[i][j] = 0;
 		}
@@ -252,32 +252,47 @@ void drawTable(char table[8][8]){
 
 void drawBackground(){
 	//Tekst RACING KINGS - (224, 10)
-	//Pocetak table - (120, 40)
-	//Polja 50x50
+	//Pocetak table - (79, 20)
+	//Polja 25x19
+	//Ispis kolona - (137+50, 460)
+	//Ispis redova - (524, 57+50)
+	//Podeliti sve sa 4
 
 	int x;
 	int y;
 	int i;
 	int j;
-	set_cursor(5);
+	set_cursor(5*320+112);
 	unsigned char natpis[] = "RACING KINGS";
 	print_string(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR, natpis, 12);
 
 	for(i = 0; i < 8; i++){
 		for(j = 0; j < 8; j++){
-			for(x = 0; x < 50; x++){
-				for(y = 0; y < 50; y++){
+			for(x = 0; x < 19; x++){
+				for(y = 0; y < 25; y++){
 					// Koordinata: red*sirina + kolona
 					if((i+j)%2){
-						VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF + (j*50+y+40)*640+(120+i*50+x), COL_WHITE);
+						VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF + ((j*25+y+20)*320+(79+i*19+x))*4, COL_WHITE);
 					}
 					else{
-						VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF + (j*50+y+40)*640+(120+i*50+x), COL_BLACK);
+						VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF + ((j*25+y+20)*320+(79+i*19+x))*4, COL_BLACK);
 					}
 				}
 			}
 		}
 	}
+
+	for(i=0; i<8; i++){
+		set_cursor(460*640+137+50*i);
+		print_char(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR, 'A'+i);
+	}
+
+	for(i=0; i<8; i++){
+		set_cursor((57+50*i)*640+524);
+		print_char(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR, '8'-i);
+	}
+
+
 }
 
 //function that generates random game map
@@ -729,12 +744,14 @@ int main() {
 			i = y * 320 + x;
 			VGA_PERIPH_MEM_mWriteMemory(
 					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
-							+ i * 4, 0x000000);
+							+ i * 4, 0b110110110);
 		}
 	}
 
+	drawBackground();
+
 	while(1){
-		drawBackground();
+		//drawBackground();
 
 	}
 
