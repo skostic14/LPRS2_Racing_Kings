@@ -402,6 +402,66 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 		}
 		
 	}
+
+	//Beli top
+
+	for (i = bx - 1; i > 0; i--){
+		if (tempTable[i][by] != 13 && tempTable[i][by] != 0)
+			break;
+		if (tempTable[i][by] == 13)
+			return 1;	
+	}
+
+	for (i = bx + 1; i < 8; i++){
+		if (tempTable[i][by] != 13 && tempTable[i][by] != 0)
+			break;
+		if (tempTable[i][by] == 13)
+			return 1;	
+	}
+
+	for (i = by - 1; i > 0; i--){
+		if (tempTable[bx][i] != 13 && tempTable[bx][i] != 0)
+			break;
+		if (tempTable[bx][i] == 13)
+			return 1;	
+	}
+
+	for (i = by + 1; i < 8; i++){
+		if (tempTable[bx][i] != 13 && tempTable[bx][i] != 0)
+			break;
+		if (tempTable[bx][i] == 13)
+			return 1;	
+	}
+
+	//Crni top
+
+	for (i = cx - 1; i > 0; i--){
+		if (tempTable[i][cy] != 13 && tempTable[i][cy] != 0)
+			break;
+		if (tempTable[i][cy] == 13)
+			return 1;	
+	}
+
+	for (i = cx + 1; i < 8; i++){
+		if (tempTable[i][cy] != 13 && tempTable[i][cy] != 0)
+			break;
+		if (tempTable[i][cy] == 13)
+			return 1;	
+	}
+
+	for (i = cy - 1; i > 0; i--){
+		if (tempTable[cx][i] != 13 && tempTable[cx][i] != 0)
+			break;
+		if (tempTable[cx][i] == 13)
+			return 1;	
+	}
+
+	for (i = cy + 1; i < 8; i++){
+		if (tempTable[cx][i] != 13 && tempTable[cx][i] != 0)
+			break;
+		if (tempTable[cx][i] == 13)
+			return 1;	
+	}
 	
 
 	
