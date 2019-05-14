@@ -126,17 +126,27 @@ void clean(int x, int y, char resultTable[SIZE][SIZE],
 
 void findLegalMoves(int x, int y, char legalMoves[8][8]){
 
-
+	int i, j;
 	
 	char selected_piece = chessTable[x][y];
-	for (i = 0; i < 8; i ++)
+	for (i = 0; i < 8; i ++){
 		for (j = 0; j < 8; j++)
 			legalMoves[i][j] = 0;
-	
-	switch (selected_piece){
+	}
+	switch (selected_piece % 10){
 		case 1:
+			for (i = x - 1; i <= x + 1; i++){
+				for (j = y - 1; j <=y + 1; j ++){
+					if ((i != x && j != y) || i >= 0 || i <= 7 || j >= 0 || j <= 7){
+						if (selected_piece > 10){
+							if (chessTable[i][j] < 10){
+								
+							}
+						}
+					}
+				}
+			}
 			
-			`
 	
 	
 	}
