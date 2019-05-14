@@ -138,7 +138,7 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 		case 1:
 			for (i = x - 1; i <= x + 1; i++){
 				for (j = y - 1; j <=y + 1; j ++){
-					if ((i != x && j != y) || i >= 0 || i <= 7 || j >= 0 || j <= 7){
+					if ((i != x && j != y) && i >= 0 && i <= 7 && j >= 0 && j <= 7){
 						if (selected_piece > 10){
 							if (chessTable[i][j] < 10){
 								if (!isKingAttacked(i, j,x, y selected_piece) && !isMyKingAttacked(i, j, selected_piece))
