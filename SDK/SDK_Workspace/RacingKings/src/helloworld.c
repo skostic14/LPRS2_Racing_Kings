@@ -124,8 +124,24 @@ void clean(int x, int y, char resultTable[SIZE][SIZE],
 	}
 }
 
-void findLegalMoves(int x, int y, char chessTable[8][8], char legalMoves[8][8]){
+void findLegalMoves(int x, int y, char legalMoves[8][8]){
 
+
+	
+	char selected_piece = chessTable[x][y];
+	for (i = 0; i < 8; i ++)
+		for (j = 0; j < 8; j++)
+			legalMoves[i][j] = 0;
+	
+	switch (selected_piece){
+		case 1:
+			
+			`
+	
+	
+	}
+	
+	
 
 }
 
