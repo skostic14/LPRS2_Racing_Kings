@@ -403,7 +403,63 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 		
 	}
 	
-
+	//Kralj
+	for(i = bx - 1; i <= bx + 1; i++){
+		for(j = by - 1; j < by + 1; j++){
+			if(i >= 0 && i < 8 && j >= 0 && j < 8){
+				if(tempTable[i][j] == 11)
+					return 1;
+			}
+		}
+	}
+	
+	for(i = cx - 1; i <= cx + 1; i++){
+		for(j = cy - 1; j < cy + 1; j++){
+			if(i >= 0 && i < 8 && j >= 0 && j < 8){
+				if(tempTable[i][j] == 1)
+					return 1;
+			}
+		}
+	}
+	
+	//Skakac
+	//Provera u redu ispod i iznad
+	for(i = bx - 1; i <= bx + 1; i+=2){
+		for(j = by - 2; j <= by + 2; j+=4){
+			if(i >= 0 && i < 8 && j >= 0 && j < 8){
+				if(tempTable[i][j] == 15)
+					return 1;
+			}
+		}
+	}
+	
+	for(i = cx - 1; i <= cx + 1; i+=2){
+		for(j = cy - 2; j <= cy + 2; j+=4){
+			if(i >= 0 && i < 8 && j >= 0 && j < 8){
+				if(tempTable[i][j] == 5)
+					return 1;
+			}
+		}
+	}
+	
+	//Provera u kolonama pored
+	for(i = bx - 2; i <= bx + 2; i+=4){
+		for(j = by - 1; j <= by + 1; j+=2){
+			if(i >= 0 && i < 8 && j >= 0 && j < 8){
+				if(tempTable[i][j] == 15)
+					return 1;
+			}
+		}
+	}
+	
+	for(i = cx - 2; i <= cx + 2; i+=4){
+		for(j = cy - 1; j <= cy + 1; j+=2){
+			if(i >= 0 && i < 8 && j >= 0 && j < 8){
+				if(tempTable[i][j] == 5)
+					return 1;
+			}
+		}
+	}
 	
 	
 	
