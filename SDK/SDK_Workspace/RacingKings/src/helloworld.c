@@ -141,13 +141,13 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 					if ((i != x && j != y) && i >= 0 && i <= 7 && j >= 0 && j <= 7){
 						if (selected_piece > 10){
 							if (chessTable[i][j] < 10){
-								if (!isKingAttacked(i, j,x, y selected_piece) && !isMyKingAttacked(i, j, selected_piece))
+								if (!isKingAttacked(i, j, x, y selected_piece))
 								legalMoves[i][j] = 1;
 							}
 						}
 						else {
 							if (chessTable[i][j] > 10){
-								if (!isKingAttacked(i ,j,x, y , selected_piece) && !isMyKingAttacked(i, j, selected_piece))
+								if (!isKingAttacked(i ,j, x, y , selected_piece))
 								legalMoves[i][j] = 1;
 							}
 						}
@@ -183,7 +183,7 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 				}
 
 				else if(chessTable[i][y]/10 != selected_piece/10){
-					if(!isKingAttacked(i, y,x,y, selected_piece))
+					if(!isKingAttacked(i, y, x, y, selected_piece))
 						legalMoves[i][y] = 1;
 						break;
 				}
@@ -195,7 +195,7 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 			//Provera u koloni
 			for(j = y-1; j > 0; j--){
 				if(chessTable[x][j] == 0){
-					if(!isKingAttacked(x, j,x,y, selected_piece))
+					if(!isKingAttacked(x, j, x, y, selected_piece))
 						legalMoves[x][j] = 1;
 				}
 				else if(chessTable[x][j]/10 != selected_piece/10){
@@ -208,7 +208,7 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 			}
 			for(j = y+1; j < 8; j++){
 				if(chessTable[x][j] == 0){
-					if(!isKingAttacked(x, j,x,y, selected_piece))
+					if(!isKingAttacked(x, j, x, y, selected_piece))
 						legalMoves[x][j] = 1;
 				}
 				else if(chessTable[x][j]/10 != selected_piece/10){
@@ -224,7 +224,7 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 			//Provera po dijagonali
 			for(i = x-1; i > 0; i--){
 				if(chessTable[i][i] == 0){
-					if(!isKingAttacked(i, i,x,y, selected_piece))
+					if(!isKingAttacked(i, i, x, y, selected_piece))
 						legalMoves[i][i] = 1;
 				}
 				else if(chessTable[i][i]/10 != selected_piece/10){
@@ -377,6 +377,7 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 //x i y su pozicije na kojima bi se nasla figura u narednom potezu (NE TRENUTNE!)
 int isKingAttacked(int x, int y, int z, int u, char figure){
 	int i, j;
+	int bx, by, cx, cy;
 	
 	char tempTable[8][8];
 
@@ -387,6 +388,21 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 
 	tempTable[x][y] = chessTable[z][u];
 	tempTable[z][u] = 0;
+
+	for (i = 0; i < 8; i++){
+		for (j = 0; j < 8; j++){
+			if (tempTable[i][j] == 1){
+				bx = i;
+				by = j;
+			}
+			else if (tempTable[i][j] == 11){
+				cx = i;
+				cy = j;
+			}
+		}
+		
+	}
+	
 
 	
 	
