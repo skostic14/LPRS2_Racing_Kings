@@ -377,34 +377,18 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 //x i y su pozicije na kojima bi se nasla figura u narednom potezu (NE TRENUTNE!)
 int isKingAttacked(int x, int y, int z, int u, char figure){
 	int i, j;
-	switch(figure%10){
-		//Kralj
-		case 1:
-		
-			break;
-			
-		//Kraljica
-		case 2:
-		
-			break;
-			
-		//Top
-		case 3:
-		
-			break;
-			
-		//Lovac
-		case 4:
-		
-			break;
-			
-		//Skakac
-		case 5:
-			
-			break;
-			
-		default:
+	
+	char tempTable[8][8];
+
+	for (i = 0; i < 8; i++){
+		for (j = 0; j < 8; j++)
+		tempTable[i][j] = chessTable[i][j]; 
 	}
+
+	tempTable[x][y] = chessTable[z][u];
+	tempTable[z][u] = 0;
+
+	
 	
 	
 }
