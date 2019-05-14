@@ -462,7 +462,7 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 	}
 	
 	
-	
+	return 0;
 }
 
 //x i y su nove pozicije na kojima ce se naci figure, dok z i u su pozicije na kojima se ta figura nalazila
