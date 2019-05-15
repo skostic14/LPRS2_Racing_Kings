@@ -154,82 +154,6 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 
 	}
 
-	//Beli top
-
-	for (i = bx - 1; i > 0; i--){
-		if (tempTable[i][by] != 13 && tempTable[i][by] != 0)
-			break;
-		if (tempTable[i][by] == 13)
-			return 1;
-		if(i < 0 || i > 7)
-			break;
-
-	}
-
-	for (i = bx + 1; i < 8; i++){
-		if (tempTable[i][by] != 13 && tempTable[i][by] != 0)
-			break;
-		if (tempTable[i][by] == 13)
-			return 1;
-		if(i < 0 || i > 7)
-			break;
-	}
-
-	for (i = by - 1; i > 0; i--){
-		if (tempTable[bx][i] != 13 && tempTable[bx][i] != 0)
-			break;
-		if (tempTable[bx][i] == 13)
-			return 1;
-		if(i < 0 || i > 7)
-			break;
-	}
-
-	for (i = by + 1; i < 8; i++){
-		if (tempTable[bx][i] != 13 && tempTable[bx][i] != 0)
-			break;
-		if (tempTable[bx][i] == 13)
-			return 1;
-		if(i < 0 || i > 7)
-			break;
-	}
-
-	//Crni top
-
-	for (i = cx - 1; i > 0; i--){
-		if (tempTable[i][cy] != 13 && tempTable[i][cy] != 0)
-			break;
-		if (tempTable[i][cy] == 13)
-			return 1;
-		if(i < 0 || i > 7)
-			break;
-	}
-
-	for (i = cx + 1; i < 8; i++){
-		if (tempTable[i][cy] != 13 && tempTable[i][cy] != 0)
-			break;
-		if (tempTable[i][cy] == 13)
-			return 1;
-		if(i < 0 || i > 7)
-			break;
-	}
-
-	for (i = cy - 1; i > 0; i--){
-		if (tempTable[cx][i] != 13 && tempTable[cx][i] != 0)
-			break;
-		if (tempTable[cx][i] == 13)
-			return 1;
-		if(i < 0 || i > 7)
-			break;
-	}
-
-	for (i = cy + 1; i < 8; i++){
-		if (tempTable[cx][i] != 13 && tempTable[cx][i] != 0)
-			break;
-		if (tempTable[cx][i] == 13)
-			return 1;
-		if(i < 0 || i > 7)
-			break;
-	}
 
 	//Kralj
 	for(i = bx - 1; i <= bx + 1; i++){
@@ -238,6 +162,8 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 				if(tempTable[i][j] == 11)
 					return 1;
 			}
+			else
+				break;
 		}
 	}
 
@@ -247,7 +173,344 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 				if(tempTable[i][j] == 1)
 					return 1;
 			}
+			else
+				break;
 		}
+	}
+
+	//Kraljica
+	for (i = bx - 1; i > 0; i--){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[i][by] != 12 && tempTable[i][by] != 0)
+			break;
+		if (tempTable[i][by] == 12)
+			return 1;
+	}
+
+	for (i = bx + 1; i < 8; i++){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[i][by] != 12 && tempTable[i][by] != 0)
+			break;
+		if (tempTable[i][by] == 12)
+			return 1;
+
+	}
+
+	for (i = by - 1; i > 0; i--){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[bx][i] != 12 && tempTable[bx][i] != 0)
+			break;
+		if (tempTable[bx][i] == 12)
+			return 1;
+
+	}
+
+	for (i = by + 1; i < 8; i++){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[bx][i] != 12 && tempTable[bx][i] != 0)
+			break;
+		if (tempTable[bx][i] == 12)
+			return 1;
+
+	}
+
+	for (i = cx - 1; i > 0; i--){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[i][cy] != 2 && tempTable[i][cy] != 0)
+			break;
+		if (tempTable[i][cy] == 2)
+			return 1;
+
+	}
+
+	for (i = cx + 1; i < 8; i++){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[i][cy] != 2 && tempTable[i][cy] != 0)
+			break;
+		if (tempTable[i][cy] == 2)
+			return 1;
+
+	}
+
+	for (i = cy - 1; i > 0; i--){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[cx][i] != 2 && tempTable[cx][i] != 0)
+			break;
+		if (tempTable[cx][i] == 2)
+			return 1;
+
+	}
+
+	for (i = cy + 1; i < 8; i++){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[cx][i] != 2 && tempTable[cx][i] != 0)
+			break;
+		if (tempTable[cx][i] == 2)
+			return 1;
+
+	}
+
+	for(i = bx-1, j=by-1; (i >= 0) && (j >=0); i--, j--){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 12)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = bx-1, j=by+1; (i >= 0) || (j < 8); i--, j++){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 12)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = bx+1, j=by+1; (i < 8) && (j < 8); i++, j++){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 12)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = bx+1, j=by-1; (i < 8) && (j >= 0); i++, j--){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 12)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = cx-1, j=cy-1; (i >= 0) && (j >=0); i--, j--){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 2)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = cx-1, j= cy+1; (i >= 0) && (j < 8); i--, j++){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 2)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = cx+1, j= cy+1; (i < 8) && (j < 8); i++, j++){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 2)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = cx+1, j= cy-1; (i < 8) && (j >= 0); i++, j--){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 2)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+
+
+	//Top
+	for (i = bx - 1; i > 0; i--){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[i][by] != 13 && tempTable[i][by] != 0)
+			break;
+		if (tempTable[i][by] == 13)
+			return 1;
+	}
+
+	for (i = bx + 1; i < 8; i++){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[i][by] != 13 && tempTable[i][by] != 0)
+			break;
+		if (tempTable[i][by] == 13)
+			return 1;
+	}
+
+	for (i = by - 1; i > 0; i--){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[bx][i] != 13 && tempTable[bx][i] != 0)
+			break;
+		if (tempTable[bx][i] == 13)
+			return 1;
+	}
+
+	for (i = by + 1; i < 8; i++){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[bx][i] != 13 && tempTable[bx][i] != 0)
+			break;
+		if (tempTable[bx][i] == 13)
+			return 1;
+	}
+
+	for (i = cx - 1; i > 0; i--){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[i][cy] != 3 && tempTable[i][cy] != 0)
+			break;
+		if (tempTable[i][cy] == 3)
+			return 1;
+
+	}
+
+	for (i = cx + 1; i < 8; i++){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[i][cy] != 3 && tempTable[i][cy] != 0)
+			break;
+		if (tempTable[i][cy] == 3)
+			return 1;
+	}
+
+	for (i = cy - 1; i > 0; i--){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[cx][i] != 3 && tempTable[cx][i] != 0)
+			break;
+		if (tempTable[cx][i] == 3)
+			return 1;
+
+	}
+
+	for (i = cy + 1; i < 8; i++){
+		if(i < 0 || i > 7)
+			break;
+		if (tempTable[cx][i] != 3 && tempTable[cx][i] != 0)
+			break;
+		if (tempTable[cx][i] == 3)
+			return 1;
+
+	}
+
+	//Lovac
+	for(i = bx-1, j=by-1; (i >= 0) && (j >=0); i--, j--){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 14)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = bx-1, j=by+1; (i >= 0) || (j < 8); i--, j++){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 14)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = bx+1, j=by+1; (i < 8) && (j < 8); i++, j++){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 14)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = bx+1, j=by-1; (i < 8) && (j >= 0); i++, j--){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 14)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = cx-1, j=cy-1; (i >= 0) && (j >=0); i--, j--){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 4)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = cx-1, j= cy+1; (i >= 0) && (j < 8); i--, j++){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 4)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = cx+1, j= cy+1; (i < 8) && (j < 8); i++, j++){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 4)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = cx+1, j= cy-1; (i < 8) && (j >= 0); i++, j--){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 4)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
 	}
 
 	//Skakac
@@ -258,6 +521,8 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 				if(tempTable[i][j] == 15)
 					return 1;
 			}
+			else
+				break;
 		}
 	}
 
@@ -267,6 +532,8 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 				if(tempTable[i][j] == 5)
 					return 1;
 			}
+			else
+				break;
 		}
 	}
 
@@ -277,6 +544,8 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 				if(tempTable[i][j] == 15)
 					return 1;
 			}
+			else
+				break;
 		}
 	}
 
@@ -286,100 +555,10 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 				if(tempTable[i][j] == 5)
 					return 1;
 			}
+			else
+				break;
 		}
 	}
-
-	//Lovac
-	for(i = bx-1, j=by-1; i >= 0, j >=0; i--, j--){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-
-		if(tempTable[i][j] == 14)
-			return 1;
-
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-
-	for(i = bx-1, j=by+1; i >= 0, j < 8; i--, j++){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-
-		if(tempTable[i][j] == 14)
-			return 1;
-
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-
-	for(i = bx+1, j=by+1; i < 8, j < 8; i++, j++){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-
-		if(tempTable[i][j] == 14)
-			return 1;
-
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-
-	for(i = bx+1, j=by-1; i < 8, j >= 0; i++, j--){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-
-		if(tempTable[i][j] == 14)
-			return 1;
-
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-
-	for(i = cx-1, j=cy-1; i >= 0, j >=0; i--, j--){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-
-		if(tempTable[i][j] == 4)
-			return 1;
-
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-
-	for(i = cx-1, j= cy+1; i >= 0, j < 8; i--, j++){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-
-		if(tempTable[i][j] == 4)
-			return 1;
-
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-
-	for(i = cx+1, j= cy+1; i < 8, j < 8; i++, j++){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-
-		if(tempTable[i][j] == 4)
-			return 1;
-
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-
-	for(i = cx+1, j= cy-1; i < 8, j >= 0; i++, j--){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-
-		if(tempTable[i][j] == 4)
-			return 1;
-
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-
-
-
 
 	return 0;
 }
@@ -482,8 +661,7 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 
 	
 			//Provera po dijagonali
-			j = y - 1;
-			for(i = x-1; i > 0; i--){
+			for(i = x-1, j = y-1; (i > 0) && (j > 0); i--, j--){
 				if(chessTable[i][j] == 0){
 					if(!isKingAttacked(i, j, x, y, selected_piece))
 						legalMoves[i][j] = 1;
@@ -495,13 +673,9 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 				}
 				else
 					break;
-				if(j == 0)
-					break;
-				j--;
 			}
 
-			j = y + 1;
-			for(i = x-1; i > 0; i--){
+			for(i = x-1, j = y + 1; (i > 0) && (j < 8); i--, j++){
 				if(chessTable[i][j] == 0){
 					if(!isKingAttacked(i, j, x, y, selected_piece))
 						legalMoves[i][j] = 1;
@@ -513,13 +687,9 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 				}
 				else
 					break;
-				if(j == 7)
-					break;
-				j++;
 			}
 
-			j = y-1;
-			for(i = x+1; i <8; i++){
+			for(i = x+1, j = y - 1; (i < 8) && (j > 0); i++, j--){
 				if(chessTable[i][j] == 0){
 					if(!isKingAttacked(i, j, x, y, selected_piece))
 						legalMoves[i][j] = 1;
@@ -531,14 +701,9 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 				}
 				else
 					break;
-
-				if(j == 7)
-					break;
-				j++;
 			}
 			
-			j = y+1;
-			for(i = x+1; i <8; i++){
+			for(i = x+1, j = y + 1; (i < 8) && (j < 8); i++, j++){
 				if(chessTable[i][j] == 0){
 					if(!isKingAttacked(i, j, x, y, selected_piece))
 						legalMoves[i][j] = 1;
@@ -550,10 +715,6 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 				}
 				else
 					break;
-
-				if(j == 0)
-					break;
-				j--;
 			}
 			break;
 			
@@ -722,7 +883,7 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 			break;
 	}
 	
-	
+	markLegalMoves(legalMoves);
 
 }
 
