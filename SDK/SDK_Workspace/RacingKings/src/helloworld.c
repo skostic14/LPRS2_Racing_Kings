@@ -63,6 +63,7 @@
 #define BEG '@'
 #define COL_WHITE 0b011010000
 #define COL_BLACK 0b111110100
+#define COL_CURSOR 0b000000000
 
 int endOfGame;
 int inc1;
@@ -1175,7 +1176,7 @@ void drawingCursor(int startX, int startY, int endX, int endY) {
 			i = y * 320 + x;
 			VGA_PERIPH_MEM_mWriteMemory(
 					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
-							+ i * 4, 0x000000);
+							+ i * 4, COL_CURSOR);
 		}
 	}
 
@@ -1184,7 +1185,7 @@ void drawingCursor(int startX, int startY, int endX, int endY) {
 			i = y * 320 + x;
 			VGA_PERIPH_MEM_mWriteMemory(
 					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
-							+ i * 4, 0x000000);
+							+ i * 4, COL_CURSOR);
 		}
 	}
 
@@ -1193,7 +1194,7 @@ void drawingCursor(int startX, int startY, int endX, int endY) {
 			i = y * 320 + x;
 			VGA_PERIPH_MEM_mWriteMemory(
 					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
-							+ i * 4, 0x000000);
+							+ i * 4, COL_CURSOR);
 		}
 	}
 
@@ -1202,7 +1203,7 @@ void drawingCursor(int startX, int startY, int endX, int endY) {
 			i = y * 320 + x;
 			VGA_PERIPH_MEM_mWriteMemory(
 					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
-							+ i * 4, 0x000000);
+							+ i * 4, COL_CURSOR);
 		}
 	}
 
@@ -1211,7 +1212,8 @@ void drawingCursor(int startX, int startY, int endX, int endY) {
 //function that controls switches and buttons
 
 void move() {
-	int startX = 81, startY = 81, endX = 96, endY = 96;
+
+	int startX = 79, startY = 20, endX = 98, endY = 45;
 	int oldStartX, oldStartY, oldEndX, oldEndY;
 	int x, y, ic, ib, i, j;
 	int prethodnoStanje;
@@ -1220,53 +1222,53 @@ void move() {
 	} btn_state_t;
 	btn_state_t btn_state = NOTHING_PRESSED;
 
-	makeTable(solvedMap);
+	//makeTable(solvedMap);
 	drawingCursor(startX, startY, endX, endY);
 
 	while (endOfGame != 1) {
-
 		if (btn_state == NOTHING_PRESSED) {
 			btn_state = SOMETHING_PRESSED;
+			drawingCursor(startX, startY, endX, endY);
 			if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & DOWN) == 0) {
-				if (endY < 224) {
+				if (endY < 196) {
 					oldStartY = startY;
 					oldEndY = endY;
-					startY += 16;
-					endY += 16;
-					drawingCursor(startX, startY, endX, endY);
-					openField(startX, oldStartY, blankMap);
+					startY += 25;
+					endY += 25;
+					//drawingCursor(startX, startY, endX, endY);
+					//openField(startX, oldStartY, blankMap);
 				}
 
 			}
 
 			else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & RIGHT) == 0) {
-				randomCounter++;
-				if (endX < 224) {
+				//randomCounter++;
+				if (endX < 213) {
 					oldStartX = startX;
-					startX += 16;
-					endX += 16;
-					drawingCursor(startX, startY, endX, endY);
-					openField(oldStartX, startY, blankMap);
+					startX += 19;
+					endX += 19;
+					//drawingCursor(startX, startY, endX, endY);
+					//openField(oldStartX, startY, blankMap);
 
 				}
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & LEFT) == 0) {
-				if (startX > 81) {
+				if (startX > 97) {
 					oldStartX = startX;
-					startX -= 16;
-					endX -= 16;
-					drawingCursor(startX, startY, endX, endY);
-					openField(oldStartX, startY, blankMap);
+					startX -= 19;
+					endX -= 19;
+					//drawingCursor(startX, startY, endX, endY);
+					//openField(oldStartX, startY, blankMap);
 				}
 
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & UP) == 0) {
-				if (startY > 81) {
+				if (startY > 44) {
 					oldStartY = startY;
-					startY -= 16;
-					endY -= 16;
-					drawingCursor(startX, startY, endX, endY);
-					openField(startX, oldStartY, blankMap);
+					startY -= 25;
+					endY -= 25;
+					//drawingCursor(startX, startY, endX, endY);
+					//openField(startX, oldStartY, blankMap);
 				}
-
+/*
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & CENTER)
 					== 0) {
 				int m = (startX - 80) / 16;
@@ -1418,11 +1420,13 @@ void move() {
 						}
 					}
 				}
-
+*/
 			} else {
 				btn_state = NOTHING_PRESSED;
 			}
 		} else { // SOMETHING_PRESSED
+			drawBackground();
+			drawingCursor(startX, startY, endX, endY);
 			if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & DOWN) == 0) {
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & RIGHT) == 0) {
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & LEFT) == 0) {
@@ -1495,11 +1499,13 @@ int main() {
 	}
 
 	drawBackground();
+	move();
 
-	while(1){
+	/*while(1){
 		//drawBackground();
+		drawingCursor(79, 20, 98, 45);
 
-	}
+	}*/
 
 	/*//drawing a map
 	for (kolona = 0; kolona < 9; kolona++) {
