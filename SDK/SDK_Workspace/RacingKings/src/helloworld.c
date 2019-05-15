@@ -124,6 +124,266 @@ void clean(int x, int y, char resultTable[SIZE][SIZE],
 	}
 }
 
+//(x,y) - nove koordinate figure
+//(y,z) - stare koordinate figure
+int isKingAttacked(int x, int y, int z, int u, char figure){
+	int i, j;
+	int bx, by, cx, cy;
+
+	char tempTable[8][8];
+
+	for (i = 0; i < 8; i++){
+		for (j = 0; j < 8; j++)
+		tempTable[i][j] = chessTable[i][j];
+	}
+
+	tempTable[x][y] = chessTable[z][u];
+	tempTable[z][u] = 0;
+
+	for (i = 0; i < 8; i++){
+		for (j = 0; j < 8; j++){
+			if (tempTable[i][j] == 1){
+				bx = i;
+				by = j;
+			}
+			else if (tempTable[i][j] == 11){
+				cx = i;
+				cy = j;
+			}
+		}
+
+	}
+
+	//Beli top
+
+	for (i = bx - 1; i > 0; i--){
+		if (tempTable[i][by] != 13 && tempTable[i][by] != 0)
+			break;
+		if (tempTable[i][by] == 13)
+			return 1;
+		if(i < 0 || i > 7)
+			break;
+
+	}
+
+	for (i = bx + 1; i < 8; i++){
+		if (tempTable[i][by] != 13 && tempTable[i][by] != 0)
+			break;
+		if (tempTable[i][by] == 13)
+			return 1;
+		if(i < 0 || i > 7)
+			break;
+	}
+
+	for (i = by - 1; i > 0; i--){
+		if (tempTable[bx][i] != 13 && tempTable[bx][i] != 0)
+			break;
+		if (tempTable[bx][i] == 13)
+			return 1;
+		if(i < 0 || i > 7)
+			break;
+	}
+
+	for (i = by + 1; i < 8; i++){
+		if (tempTable[bx][i] != 13 && tempTable[bx][i] != 0)
+			break;
+		if (tempTable[bx][i] == 13)
+			return 1;
+		if(i < 0 || i > 7)
+			break;
+	}
+
+	//Crni top
+
+	for (i = cx - 1; i > 0; i--){
+		if (tempTable[i][cy] != 13 && tempTable[i][cy] != 0)
+			break;
+		if (tempTable[i][cy] == 13)
+			return 1;
+		if(i < 0 || i > 7)
+			break;
+	}
+
+	for (i = cx + 1; i < 8; i++){
+		if (tempTable[i][cy] != 13 && tempTable[i][cy] != 0)
+			break;
+		if (tempTable[i][cy] == 13)
+			return 1;
+		if(i < 0 || i > 7)
+			break;
+	}
+
+	for (i = cy - 1; i > 0; i--){
+		if (tempTable[cx][i] != 13 && tempTable[cx][i] != 0)
+			break;
+		if (tempTable[cx][i] == 13)
+			return 1;
+		if(i < 0 || i > 7)
+			break;
+	}
+
+	for (i = cy + 1; i < 8; i++){
+		if (tempTable[cx][i] != 13 && tempTable[cx][i] != 0)
+			break;
+		if (tempTable[cx][i] == 13)
+			return 1;
+		if(i < 0 || i > 7)
+			break;
+	}
+
+	//Kralj
+	for(i = bx - 1; i <= bx + 1; i++){
+		for(j = by - 1; j < by + 1; j++){
+			if(i >= 0 && i < 8 && j >= 0 && j < 8){
+				if(tempTable[i][j] == 11)
+					return 1;
+			}
+		}
+	}
+
+	for(i = cx - 1; i <= cx + 1; i++){
+		for(j = cy - 1; j < cy + 1; j++){
+			if(i >= 0 && i < 8 && j >= 0 && j < 8){
+				if(tempTable[i][j] == 1)
+					return 1;
+			}
+		}
+	}
+
+	//Skakac
+	//Provera u redu ispod i iznad
+	for(i = bx - 1; i <= bx + 1; i+=2){
+		for(j = by - 2; j <= by + 2; j+=4){
+			if(i >= 0 && i < 8 && j >= 0 && j < 8){
+				if(tempTable[i][j] == 15)
+					return 1;
+			}
+		}
+	}
+
+	for(i = cx - 1; i <= cx + 1; i+=2){
+		for(j = cy - 2; j <= cy + 2; j+=4){
+			if(i >= 0 && i < 8 && j >= 0 && j < 8){
+				if(tempTable[i][j] == 5)
+					return 1;
+			}
+		}
+	}
+
+	//Provera u kolonama pored
+	for(i = bx - 2; i <= bx + 2; i+=4){
+		for(j = by - 1; j <= by + 1; j+=2){
+			if(i >= 0 && i < 8 && j >= 0 && j < 8){
+				if(tempTable[i][j] == 15)
+					return 1;
+			}
+		}
+	}
+
+	for(i = cx - 2; i <= cx + 2; i+=4){
+		for(j = cy - 1; j <= cy + 1; j+=2){
+			if(i >= 0 && i < 8 && j >= 0 && j < 8){
+				if(tempTable[i][j] == 5)
+					return 1;
+			}
+		}
+	}
+
+	//Lovac
+	for(i = bx-1, j=by-1; i >= 0, j >=0; i--, j--){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 14)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = bx-1, j=by+1; i >= 0, j < 8; i--, j++){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 14)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = bx+1, j=by+1; i < 8, j < 8; i++, j++){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 14)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = bx+1, j=by-1; i < 8, j >= 0; i++, j--){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 14)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = cx-1, j=cy-1; i >= 0, j >=0; i--, j--){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 4)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = cx-1, j= cy+1; i >= 0, j < 8; i--, j++){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 4)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = cx+1, j= cy+1; i < 8, j < 8; i++, j++){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 4)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+	for(i = cx+1, j= cy-1; i < 8, j >= 0; i++, j--){
+		if(i<0 || i>7 || j<0 || j>7)
+			break;
+
+		if(tempTable[i][j] == 4)
+			return 1;
+
+		else if(tempTable[i][j]!=0)
+			break;
+	}
+
+
+
+
+	return 0;
+}
+
 void findLegalMoves(int x, int y, char legalMoves[8][8]){
 
 	int i, j;
@@ -141,13 +401,13 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 					if ((i != x && j != y) && i >= 0 && i <= 7 && j >= 0 && j <= 7){
 						if (selected_piece > 10){
 							if (chessTable[i][j] < 10){
-								if (!isKingAttacked(i, j, x, y selected_piece))
+								if (!isKingAttacked(i, j, x, y, selected_piece))
 								legalMoves[i][j] = 1;
 							}
 						}
 						else {
 							if (chessTable[i][j] > 10){
-								if (!isKingAttacked(i ,j, x, y , selected_piece))
+								if (!isKingAttacked(i, j, x, y, selected_piece))
 								legalMoves[i][j] = 1;
 							}
 						}
@@ -222,32 +482,78 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 
 	
 			//Provera po dijagonali
+			j = y - 1;
 			for(i = x-1; i > 0; i--){
-				if(chessTable[i][i] == 0){
-					if(!isKingAttacked(i, i, x, y, selected_piece))
-						legalMoves[i][i] = 1;
+				if(chessTable[i][j] == 0){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
 				}
-				else if(chessTable[i][i]/10 != selected_piece/10){
-					if(!isKingAttacked(i, i,x,y, selected_piece))
-						legalMoves[i][i] = 1;
+				else if(chessTable[i][j]/10 != selected_piece/10){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
 						break;
 				}
 				else
-					break;	
+					break;
+				if(j == 0)
+					break;
+				j--;
+			}
+
+			j = y + 1;
+			for(i = x-1; i > 0; i--){
+				if(chessTable[i][j] == 0){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
+				}
+				else if(chessTable[i][j]/10 != selected_piece/10){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
+						break;
+				}
+				else
+					break;
+				if(j == 7)
+					break;
+				j++;
+			}
+
+			j = y-1;
+			for(i = x+1; i <8; i++){
+				if(chessTable[i][j] == 0){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
+				}
+				else if(chessTable[i][j]/10 != selected_piece/10){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
+						break;
+				}
+				else
+					break;
+
+				if(j == 7)
+					break;
+				j++;
 			}
 			
+			j = y+1;
 			for(i = x+1; i <8; i++){
-				if(chessTable[i][i] == 0){
-					if(!isKingAttacked(i, i,x, y, selected_piece))
-						legalMoves[i][i] = 1;
+				if(chessTable[i][j] == 0){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
 				}
-				else if(chessTable[i][i]/10 != selected_piece/10){
-					if(!isKingAttacked(i, i,x, y, selected_piece))
-						legalMoves[i][i] = 1;
+				else if(chessTable[i][j]/10 != selected_piece/10){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
 						break;
 				}
 				else
-					break;	
+					break;
+
+				if(j == 0)
+					break;
+				j--;
 			}
 			break;
 			
@@ -312,32 +618,78 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 			
 		//Lovac
 		case 4:
+			j = y - 1;
 			for(i = x-1; i > 0; i--){
-				if(chessTable[i][i] == 0){
-					if(!isKingAttacked(i, i, x, y, selected_piece))
-						legalMoves[i][i] = 1;
+				if(chessTable[i][j] == 0){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
 				}
-				else if(chessTable[i][i]/10 != selected_piece/10){
-					if(!isKingAttacked(i, i,x, y, selected_piece))
-						legalMoves[i][i] = 1;
+				else if(chessTable[i][j]/10 != selected_piece/10){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
 						break;
 				}
 				else
-					break;	
+					break;
+				if(j == 0)
+					break;
+				j--;
+			}
+
+			j = y + 1;
+			for(i = x-1; i > 0; i--){
+				if(chessTable[i][j] == 0){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
+				}
+				else if(chessTable[i][j]/10 != selected_piece/10){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
+						break;
+				}
+				else
+					break;
+				if(j == 7)
+					break;
+				j++;
+			}
+
+			j = y-1;
+			for(i = x+1; i <8; i++){
+				if(chessTable[i][j] == 0){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
+				}
+				else if(chessTable[i][j]/10 != selected_piece/10){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
+						break;
+				}
+				else
+					break;
+
+				if(j == 7)
+					break;
+				j++;
 			}
 			
+			j = y+1;
 			for(i = x+1; i <8; i++){
-				if(chessTable[i][i] == 0){
-					if(!isKingAttacked(i, i,x, y, selected_piece))
-						legalMoves[i][i] = 1;
+				if(chessTable[i][j] == 0){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
 				}
-				else if(chessTable[i][i]/10 != selected_piece/10){
-					if(!isKingAttacked(i, i, x, y, selected_piece))
-						legalMoves[i][i] = 1;
+				else if(chessTable[i][j]/10 != selected_piece/10){
+					if(!isKingAttacked(i, j, x, y, selected_piece))
+						legalMoves[i][j] = 1;
 						break;
 				}
 				else
-					break;	
+					break;
+
+				if(j == 0)
+					break;
+				j--;
 			}
 			break;
 			
@@ -372,273 +724,6 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 	
 	
 
-}
-
-//x i y su pozicije na kojima bi se nasla figura u narednom potezu (NE TRENUTNE!)
-int isKingAttacked(int x, int y, int z, int u, char figure){
-	int i, j;
-	int bx, by, cx, cy;
-	
-	char tempTable[8][8];
-
-	for (i = 0; i < 8; i++){
-		for (j = 0; j < 8; j++)
-		tempTable[i][j] = chessTable[i][j]; 
-	}
-
-	tempTable[x][y] = chessTable[z][u];
-	tempTable[z][u] = 0;
-
-	for (i = 0; i < 8; i++){
-		for (j = 0; j < 8; j++){
-			if (tempTable[i][j] == 1){
-				bx = i;
-				by = j;
-			}
-			else if (tempTable[i][j] == 11){
-				cx = i;
-				cy = j;
-			}
-		}
-		
-	}
-
-	//Beli top
-
-	for (i = bx - 1; i > 0; i--){
-		if (tempTable[i][by] != 13 && tempTable[i][by] != 0)
-			break;
-		if (tempTable[i][by] == 13)
-			return 1;
-		if(i < 0 || i > 7)
-			break;
-		
-	}
-
-	for (i = bx + 1; i < 8; i++){
-		if (tempTable[i][by] != 13 && tempTable[i][by] != 0)
-			break;
-		if (tempTable[i][by] == 13)
-			return 1;	
-		if(i < 0 || i > 7)
-			break;
-	}
-
-	for (i = by - 1; i > 0; i--){
-		if (tempTable[bx][i] != 13 && tempTable[bx][i] != 0)
-			break;
-		if (tempTable[bx][i] == 13)
-			return 1;	
-		if(i < 0 || i > 7)
-			break;
-	}
-
-	for (i = by + 1; i < 8; i++){
-		if (tempTable[bx][i] != 13 && tempTable[bx][i] != 0)
-			break;
-		if (tempTable[bx][i] == 13)
-			return 1;	
-		if(i < 0 || i > 7)
-			break;
-	}
-
-	//Crni top
-
-	for (i = cx - 1; i > 0; i--){
-		if (tempTable[i][cy] != 13 && tempTable[i][cy] != 0)
-			break;
-		if (tempTable[i][cy] == 13)
-			return 1;	
-		if(i < 0 || i > 7)
-			break;
-	}
-
-	for (i = cx + 1; i < 8; i++){
-		if (tempTable[i][cy] != 13 && tempTable[i][cy] != 0)
-			break;
-		if (tempTable[i][cy] == 13)
-			return 1;
-		if(i < 0 || i > 7)
-			break;
-	}
-
-	for (i = cy - 1; i > 0; i--){
-		if (tempTable[cx][i] != 13 && tempTable[cx][i] != 0)
-			break;
-		if (tempTable[cx][i] == 13)
-			return 1;	
-		if(i < 0 || i > 7)
-			break;
-	}
-
-	for (i = cy + 1; i < 8; i++){
-		if (tempTable[cx][i] != 13 && tempTable[cx][i] != 0)
-			break;
-		if (tempTable[cx][i] == 13)
-			return 1;
-		if(i < 0 || i > 7)
-			break;
-	}
-	
-	//Kralj
-	for(i = bx - 1; i <= bx + 1; i++){
-		for(j = by - 1; j < by + 1; j++){
-			if(i >= 0 && i < 8 && j >= 0 && j < 8){
-				if(tempTable[i][j] == 11)
-					return 1;
-			}
-		}
-	}
-	
-	for(i = cx - 1; i <= cx + 1; i++){
-		for(j = cy - 1; j < cy + 1; j++){
-			if(i >= 0 && i < 8 && j >= 0 && j < 8){
-				if(tempTable[i][j] == 1)
-					return 1;
-			}
-		}
-	}
-	
-	//Skakac
-	//Provera u redu ispod i iznad
-	for(i = bx - 1; i <= bx + 1; i+=2){
-		for(j = by - 2; j <= by + 2; j+=4){
-			if(i >= 0 && i < 8 && j >= 0 && j < 8){
-				if(tempTable[i][j] == 15)
-					return 1;
-			}
-		}
-	}
-	
-	for(i = cx - 1; i <= cx + 1; i+=2){
-		for(j = cy - 2; j <= cy + 2; j+=4){
-			if(i >= 0 && i < 8 && j >= 0 && j < 8){
-				if(tempTable[i][j] == 5)
-					return 1;
-			}
-		}
-	}
-	
-	//Provera u kolonama pored
-	for(i = bx - 2; i <= bx + 2; i+=4){
-		for(j = by - 1; j <= by + 1; j+=2){
-			if(i >= 0 && i < 8 && j >= 0 && j < 8){
-				if(tempTable[i][j] == 15)
-					return 1;
-			}
-		}
-	}
-	
-	for(i = cx - 2; i <= cx + 2; i+=4){
-		for(j = cy - 1; j <= cy + 1; j+=2){
-			if(i >= 0 && i < 8 && j >= 0 && j < 8){
-				if(tempTable[i][j] == 5)
-					return 1;
-			}
-		}
-	}
-	
-	//Lovac
-	for(i = bx-1, j=by-1; i >= 0, j >=0; i--, j--){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-		
-		if(tempTable[i][j] == 14)
-			return 1;
-		
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-	
-	for(i = bx-1, j=by+1; i >= 0, j < 8; i--, j++){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-		
-		if(tempTable[i][j] == 14)
-			return 1;
-		
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-	
-	for(i = bx+1, j=by+1; i < 8, j < 8; i++, j++){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-		
-		if(tempTable[i][j] == 14)
-			return 1;
-		
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-	
-	for(i = bx+1, j=by-1; i < 8, j >= 0; i++, j--){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-		
-		if(tempTable[i][j] == 14)
-			return 1;
-		
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-	
-	for(i = cx-1, j=cy-1; i >= 0, j >=0; i--, j--){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-		
-		if(tempTable[i][j] == 4)
-			return 1;
-		
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-	
-	for(i = cx-1, j= cy+1; i >= 0, j < 8; i--, j++){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-		
-		if(tempTable[i][j] == 4)
-			return 1;
-		
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-	
-	for(i = cx+1, j= cy+1; i < 8, j < 8; i++, j++){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-		
-		if(tempTable[i][j] == 4)
-			return 1;
-		
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-	
-	for(i = cx+1, j= cy-1; i < 8, j >= 0; i++, j--){
-		if(i<0 || i>7 || j<0 || j>7)
-			break;
-		
-		if(tempTable[i][j] == 4)
-			return 1;
-		
-		else if(tempTable[i][j]!=0)
-			break;
-	}
-	
-	
-	
-	
-	return 0;
-}
-
-//x i y su nove pozicije na kojima ce se naci figure, dok z i u su pozicije na kojima se ta figura nalazila
-//temp matrix ce simulirati situaciju sledeceg poteza, jer u chessTable nema validne podatke u tom trenutku
-//podesi tempMatrix na osnovu ulaznih podataka
-int isMyKingAttacked(int x, int y, int z, int u, char figure){
-	char tempMatrix[8][8];
-	
 }
 
 void markLegalMoves(char legalMoves[8][8]){
