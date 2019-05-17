@@ -41,6 +41,7 @@
 #include "xil_exception.h"
 #include "vga_periph_mem.h"
 #include "minesweeper_sprites.h"
+#include "sah_sprites.c"
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>
 #define SIZE 9
@@ -64,6 +65,8 @@
 #define COL_WHITE 0b011010000
 #define COL_BLACK 0b111110100
 #define COL_CURSOR 0b000000000
+#define COL_CURSOR_SELECT 0b111000000
+#define COL_LEGAL_MOVE 0b000111000
 
 int endOfGame;
 int inc1;
@@ -1040,6 +1043,20 @@ void drawBackground(){
 	}
 
 
+	drawMap(0, 50, 79, 10, 73, 8);
+
+	drawMap(0, 0, 79, 20, 19, 25);
+	drawMap(19, 0, 98, 20, 19, 25);
+	drawMap(38, 0, 117, 20, 19, 25);
+	drawMap(57, 0, 136, 20, 19, 25);
+	drawMap(76, 0, 155, 20, 19, 25);
+
+	drawMap(0, 25, 79, 45, 19, 25);
+	drawMap(19, 25, 98, 45, 19, 25);
+	drawMap(38, 25, 117, 45, 19, 25);
+	drawMap(57, 25, 136, 45, 19, 25);
+	drawMap(76, 25, 155, 45, 19, 25);
+
 }
 
 //function that generates random game map
@@ -1149,20 +1166,18 @@ void drawMap(int in_x, int in_y, int out_x, int out_y, int width, int height) {
 			oi = oy * 320 + ox;
 			ix = in_x + x;
 			iy = in_y + y;
-			ii = iy * minesweeper_sprites.width + ix;
-			R = minesweeper_sprites.pixel_data[ii
-					* minesweeper_sprites.bytes_per_pixel] >> 5;
-			G = minesweeper_sprites.pixel_data[ii
-					* minesweeper_sprites.bytes_per_pixel + 1] >> 5;
-			B = minesweeper_sprites.pixel_data[ii
-					* minesweeper_sprites.bytes_per_pixel + 2] >> 5;
+			ii = iy * chess_sprites.width + ix;
+			R = chess_sprites.pixel_data[ii
+					* chess_sprites.bytes_per_pixel] >> 5;
+			G = chess_sprites.pixel_data[ii
+					* chess_sprites.bytes_per_pixel + 1] >> 5;
+			B = chess_sprites.pixel_data[ii
+					* chess_sprites.bytes_per_pixel + 2] >> 5;
 			R <<= 6;
 			G <<= 3;
 			RGB = R | G | B;
-
-			VGA_PERIPH_MEM_mWriteMemory(
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
-							+ oi * 4, RGB);
+			if(RGB != 0b000111000)
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF + oi * 4, RGB);
 		}
 	}
 
