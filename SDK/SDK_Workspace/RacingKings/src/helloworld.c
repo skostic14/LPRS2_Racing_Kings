@@ -41,7 +41,7 @@
 #include "xil_exception.h"
 #include "vga_periph_mem.h"
 #include "minesweeper_sprites.h"
-#include "sah_sprites.c"
+#include "sprites_green.c"
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>
 #define SIZE 9
@@ -1043,7 +1043,9 @@ void drawBackground(){
 	}
 
 
-	drawMap(0, 50, 79, 10, 73, 8);
+	drawMap(0, 50, 79, 10, 95, 8);
+
+	drawMap(0, 58, 79, 225, 95, 10);
 
 	drawMap(0, 0, 79, 20, 19, 25);
 	drawMap(19, 0, 98, 20, 19, 25);
