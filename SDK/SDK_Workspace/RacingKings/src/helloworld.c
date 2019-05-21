@@ -996,7 +996,7 @@ void initTableMatrix(){
 	
 }
 
-void drawTable(char table[8][8]){
+void drawTable(){
 
 }
 
@@ -1043,11 +1043,11 @@ void drawBackground(){
 	}
 
 
-	drawMap(0, 50, 79, 10, 95, 8);
+	drawMap(0, 50, 79, 10, 60, 8);
 
-	drawMap(0, 58, 79, 225, 95, 10);
+	//drawMap(0, 58, 79, 225, 95, 10);
 
-	drawMap(0, 0, 79, 20, 19, 25);
+	/*drawMap(0, 0, 79, 20, 19, 25);
 	drawMap(19, 0, 98, 20, 19, 25);
 	drawMap(38, 0, 117, 20, 19, 25);
 	drawMap(57, 0, 136, 20, 19, 25);
@@ -1057,7 +1057,27 @@ void drawBackground(){
 	drawMap(19, 25, 98, 45, 19, 25);
 	drawMap(38, 25, 117, 45, 19, 25);
 	drawMap(57, 25, 136, 45, 19, 25);
-	drawMap(76, 25, 155, 45, 19, 25);
+	drawMap(76, 25, 155, 45, 19, 25);*/
+
+	//Ispis redova i kolona
+
+	drawMap(0, 58, 235, 203, 3, 10);
+	drawMap(3, 58, 234, 178, 4, 10);
+	drawMap(7, 58, 233, 153, 5, 10);
+	drawMap(12, 58, 233, 128, 5, 10);
+	drawMap(17, 58, 233, 103, 5, 10);
+	drawMap(22, 58, 233, 78, 5, 10);
+	drawMap(27, 58, 233, 53, 5, 10);
+	drawMap(32, 58, 233, 28, 5, 10);
+
+	drawMap(51, 58, 86, 220, 4, 10);
+	drawMap(56, 58, 105, 220, 4, 10);
+	drawMap(61, 58, 124, 220, 4, 10);
+	drawMap(66, 58, 143, 220, 4, 10);
+	drawMap(71, 58, 162, 220, 4, 10);
+	drawMap(76, 58, 181, 220, 4, 10);
+	drawMap(81, 58, 200, 220, 4, 10);
+	drawMap(86, 58, 219, 220, 4, 10);
 
 }
 
