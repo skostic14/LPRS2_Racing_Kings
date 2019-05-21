@@ -996,8 +996,15 @@ void initTableMatrix(){
 	
 }
 
-void drawTable(char table[8][8]){
-
+void drawTable(){
+	int i, j;
+	for(i = 0; i < 8; i++){
+		for(j = 0; j < 8; j++)}{
+			if(chessTable[i][j] != 0){
+				drawMap(19 * chessTable[i][j]%10, chessTable[i][j]/10*25, 79 + i*19, 20 + j*25, 19, 25);
+			}
+		}
+	}
 }
 
 void drawBackground(){
@@ -1043,11 +1050,11 @@ void drawBackground(){
 	}
 
 
-	drawMap(0, 50, 79, 10, 95, 8);
+	drawMap(0, 50, 79, 10, 60, 8);
 
 	drawMap(0, 58, 79, 225, 95, 10);
 
-	drawMap(0, 0, 79, 20, 19, 25);
+	/*drawMap(0, 0, 79, 20, 19, 25);
 	drawMap(19, 0, 98, 20, 19, 25);
 	drawMap(38, 0, 117, 20, 19, 25);
 	drawMap(57, 0, 136, 20, 19, 25);
@@ -1057,7 +1064,7 @@ void drawBackground(){
 	drawMap(19, 25, 98, 45, 19, 25);
 	drawMap(38, 25, 117, 45, 19, 25);
 	drawMap(57, 25, 136, 45, 19, 25);
-	drawMap(76, 25, 155, 45, 19, 25);
+	drawMap(76, 25, 155, 45, 19, 25);*/
 
 }
 
@@ -1516,6 +1523,8 @@ int main() {
 	}
 
 	drawBackground();
+	initTable();
+	drawTable();
 	move();
 
 	/*while(1){
