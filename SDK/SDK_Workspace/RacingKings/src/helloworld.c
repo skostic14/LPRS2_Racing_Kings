@@ -892,7 +892,14 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 }
 
 void markLegalMoves(char legalMoves[8][8]){
-
+	int i,j;
+	for (i = 0; i < 8; i++){
+		for (j = 0; j < 8; j++){
+			if (legalMoves[i][j] == 1){
+				drawingCursor(79 + j * 19, 20 + i * 25, 97 + j * 19, 44 + i * 25, 1);
+			}
+		}
+	}
 }
 
 //function for opening selected field
@@ -976,32 +983,32 @@ void initTableMatrix(){
 	}
 
 	//Namestanje figurica na pocetne polozaje
-	chessTable[6][0]=11;
-	chessTable[6][1]=13;
-	chessTable[6][2]=14;
-	chessTable[6][3]=15;
-	chessTable[6][4]=5;
-	chessTable[6][5]=4;
-	chessTable[6][6]=3;
-	chessTable[6][7]=1;
+	chessTable[6][0]=1;
+	chessTable[6][1]=3;
+	chessTable[6][2]=4;
+	chessTable[6][3]=5;
+	chessTable[6][4]=15;
+	chessTable[6][5]=14;
+	chessTable[6][6]=13;
+	chessTable[6][7]=11;
 
-	chessTable[7][0]=12;
-	chessTable[7][1]=13;
-	chessTable[7][2]=14;
-	chessTable[7][3]=15;
-	chessTable[7][4]=5;
-	chessTable[7][5]=4;
-	chessTable[7][6]=3;
-	chessTable[7][7]=2;
+	chessTable[7][0]=2;
+	chessTable[7][1]=3;
+	chessTable[7][2]=4;
+	chessTable[7][3]=5;
+	chessTable[7][4]=15;
+	chessTable[7][5]=14;
+	chessTable[7][6]=13;
+	chessTable[7][7]=12;
 	
 }
 
 void drawTable(){
 	int i, j;
 	for(i = 0; i < 8; i++){
-		for(j = 0; j < 8; j++)}{
+		for(j = 0; j < 8; j++){
 			if(chessTable[i][j] != 0){
-				drawMap(19 * chessTable[i][j]%10, chessTable[i][j]/10*25, 79 + i*19, 20 + j*25, 19, 25);
+				drawMap(19 * (chessTable[i][j]%10- 1), chessTable[i][j]/10*25, 79 + j*19, 20 + i*25, 19, 25);
 			}
 		}
 	}
@@ -1072,6 +1079,8 @@ void drawBackground(){
 	drawMap(76, 58, 181, 220, 4, 10);
 	drawMap(81, 58, 200, 220, 4, 10);
 	drawMap(86, 58, 219, 220, 4, 10);
+
+	drawTable();
 
 }
 
@@ -1200,7 +1209,7 @@ void drawMap(int in_x, int in_y, int out_x, int out_y, int width, int height) {
 }
 
 //drawing cursor for indicating position
-void drawingCursor(int startX, int startY, int endX, int endY) {
+void drawingCursor(int startX, int startY, int endX, int endY, int mod) {
 
 	for (x = startX; x < endX; x++) {
 		for (y = startY; y < startY + 2; y++) {
@@ -1254,12 +1263,12 @@ void move() {
 	btn_state_t btn_state = NOTHING_PRESSED;
 
 	//makeTable(solvedMap);
-	drawingCursor(startX, startY, endX, endY);
+	drawingCursor(startX, startY, endX, endY, 0);
 
 	while (endOfGame != 1) {
 		if (btn_state == NOTHING_PRESSED) {
 			btn_state = SOMETHING_PRESSED;
-			drawingCursor(startX, startY, endX, endY);
+			drawingCursor(startX, startY, endX, endY, 0);
 			if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & DOWN) == 0) {
 				if (endY < 196) {
 					oldStartY = startY;
@@ -1457,7 +1466,7 @@ void move() {
 			}
 		} else { // SOMETHING_PRESSED
 			drawBackground();
-			drawingCursor(startX, startY, endX, endY);
+			drawingCursor(startX, startY, endX, endY, 0);
 			if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & DOWN) == 0) {
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & RIGHT) == 0) {
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & LEFT) == 0) {
@@ -1530,7 +1539,7 @@ int main() {
 	}
 
 	drawBackground();
-	initTable();
+	initTableMatrix();
 	drawTable();
 	move();
 
