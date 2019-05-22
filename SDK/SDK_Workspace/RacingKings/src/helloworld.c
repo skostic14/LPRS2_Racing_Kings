@@ -184,7 +184,7 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 	}
 
 	//Kraljica
-	for (i = bx - 1; i > 0; i--){
+	for (i = bx - 1; i >= 0; i--){
 		if(i < 0 || i > 7)
 			break;
 		if (tempTable[i][by] != 12 && tempTable[i][by] != 0)
@@ -203,7 +203,7 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 
 	}
 
-	for (i = by - 1; i > 0; i--){
+	for (i = by - 1; i >= 0; i--){
 		if(i < 0 || i > 7)
 			break;
 		if (tempTable[bx][i] != 12 && tempTable[bx][i] != 0)
@@ -223,7 +223,7 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 
 	}
 
-	for (i = cx - 1; i > 0; i--){
+	for (i = cx - 1; i >= 0; i--){
 		if(i < 0 || i > 7)
 			break;
 		if (tempTable[i][cy] != 2 && tempTable[i][cy] != 0)
@@ -243,7 +243,7 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 
 	}
 
-	for (i = cy - 1; i > 0; i--){
+	for (i = cy - 1; i >= 0; i--){
 		if(i < 0 || i > 7)
 			break;
 		if (tempTable[cx][i] != 2 && tempTable[cx][i] != 0)
@@ -577,8 +577,8 @@ void findLegalMoves(int x, int y){
 		//Kralj
 		case 1:
 			for (i = x - 1; i <= x + 1; i++){
-				for (j = y - 1; j <=y + 1; j ++){
-					if ((i != x && j != y) && i >= 0 && i <= 7 && j >= 0 && j <= 7){
+				for (j = y - 1; j <= y + 1; j ++){
+					if (!(i == x && j == y) && i >= 0 && i <= 7 && j >= 0 && j <= 7){
 						if (selected_piece > 10){
 							if (chessTable[i][j] < 10){
 								if (!isKingAttacked(i, j, x, y, selected_piece))
@@ -586,7 +586,7 @@ void findLegalMoves(int x, int y){
 							}
 						}
 						else {
-							if (chessTable[i][j] > 10){
+							if (chessTable[i][j] > 10 || chessTable[i][j] == 0){
 								if (!isKingAttacked(i, j, x, y, selected_piece))
 								legalMoves[i][j] = 1;
 							}
@@ -600,7 +600,7 @@ void findLegalMoves(int x, int y){
 		//Kraljica
 		case 2:		
 			//Provera u redu
-			for(i = x-1; i > 0; i--){
+			for(i = x-1; i >= 0; i--){
 				//Ako je polje prazno
 				if(chessTable[i][y] == 0){
 					if(!isKingAttacked(i, y, x, y, selected_piece))
@@ -633,7 +633,7 @@ void findLegalMoves(int x, int y){
 			}
 			
 			//Provera u koloni
-			for(j = y-1; j > 0; j--){
+			for(j = y-1; j >= 0; j--){
 				if(chessTable[x][j] == 0){
 					if(!isKingAttacked(x, j, x, y, selected_piece))
 						legalMoves[x][j] = 1;
@@ -662,7 +662,7 @@ void findLegalMoves(int x, int y){
 
 	
 			//Provera po dijagonali
-			for(i = x-1, j = y-1; (i > 0) && (j > 0); i--, j--){
+			for(i = x-1, j = y-1; (i >= 0) && (j >= 0); i--, j--){
 				if(chessTable[i][j] == 0){
 					if(!isKingAttacked(i, j, x, y, selected_piece))
 						legalMoves[i][j] = 1;
@@ -676,7 +676,7 @@ void findLegalMoves(int x, int y){
 					break;
 			}
 
-			for(i = x-1, j = y + 1; (i > 0) && (j < 8); i--, j++){
+			for(i = x-1, j = y + 1; (i >= 0) && (j < 8); i--, j++){
 				if(chessTable[i][j] == 0){
 					if(!isKingAttacked(i, j, x, y, selected_piece))
 						legalMoves[i][j] = 1;
@@ -690,7 +690,7 @@ void findLegalMoves(int x, int y){
 					break;
 			}
 
-			for(i = x+1, j = y - 1; (i < 8) && (j > 0); i++, j--){
+			for(i = x+1, j = y - 1; (i < 8) && (j >= 0); i++, j--){
 				if(chessTable[i][j] == 0){
 					if(!isKingAttacked(i, j, x, y, selected_piece))
 						legalMoves[i][j] = 1;
@@ -721,7 +721,7 @@ void findLegalMoves(int x, int y){
 			
 		//Top
 		case 3:
-			for(i = x-1; i > 0; i--){
+			for(i = x-1; i >= 0; i--){
 				if(chessTable[i][y] == 0){
 					if(!isKingAttacked(i, y,x, y, selected_piece))
 						legalMoves[i][y] = 1;
@@ -750,7 +750,7 @@ void findLegalMoves(int x, int y){
 					break;	
 			}
 			
-			for(j = y-1; j > 0; j--){
+			for(j = y-1; j >= 0; j--){
 				if(chessTable[x][j] == 0){
 					if(!isKingAttacked(x, j,x,y, selected_piece))
 						legalMoves[x][j] = 1;
@@ -780,8 +780,7 @@ void findLegalMoves(int x, int y){
 			
 		//Lovac
 		case 4:
-			j = y - 1;
-			for(i = x-1; i > 0; i--){
+			for(i = x-1, j = y - 1; (i >= 0) && (j >= 0); i--, j--){
 				if(chessTable[i][j] == 0){
 					if(!isKingAttacked(i, j, x, y, selected_piece))
 						legalMoves[i][j] = 1;
@@ -793,13 +792,9 @@ void findLegalMoves(int x, int y){
 				}
 				else
 					break;
-				if(j == 0)
-					break;
-				j--;
 			}
 
-			j = y + 1;
-			for(i = x-1; i > 0; i--){
+			for(i = x-1, j = y + 1; (i >= 0) && (j < 8); i--, j++){
 				if(chessTable[i][j] == 0){
 					if(!isKingAttacked(i, j, x, y, selected_piece))
 						legalMoves[i][j] = 1;
@@ -811,13 +806,9 @@ void findLegalMoves(int x, int y){
 				}
 				else
 					break;
-				if(j == 7)
-					break;
-				j++;
 			}
 
-			j = y-1;
-			for(i = x+1; i <8; i++){
+			for(i = x+1, j = y + 1; (i < 8) && (j < 8); i++, j++){
 				if(chessTable[i][j] == 0){
 					if(!isKingAttacked(i, j, x, y, selected_piece))
 						legalMoves[i][j] = 1;
@@ -829,14 +820,9 @@ void findLegalMoves(int x, int y){
 				}
 				else
 					break;
-
-				if(j == 7)
-					break;
-				j++;
 			}
-			
-			j = y+1;
-			for(i = x+1; i <8; i++){
+
+			for(i = x+1, j = y - 1; (i < 8) && (j >= 0); i++, j--){
 				if(chessTable[i][j] == 0){
 					if(!isKingAttacked(i, j, x, y, selected_piece))
 						legalMoves[i][j] = 1;
@@ -848,22 +834,18 @@ void findLegalMoves(int x, int y){
 				}
 				else
 					break;
-
-				if(j == 0)
-					break;
-				j--;
 			}
 			break;
 			
 		//Skakac
 		case 5:
 			//Provera u redu ispod/iznad
-			for(i = x - 2; i <= x+2; i+=4){
+			/*for(i = x - 2; i <= x+2; i+=4){
 				for(j = y - 1 ; j <= y+1; y+=2){
-					if(i > 0 && j > 0 && i < 8 && j < 8){
+					if(i >= 0 && j >= 0 && i < 8 && j < 8){
 						if(!isKingAttacked(i, j,x, y, selected_piece)){
 							if(chessTable[i][j] == 0 || chessTable[i][j]/10 != selected_piece/10)
-								legalMoves[i][i] = 1;
+								legalMoves[i][j] = 1;
 						}
 							
 					}
@@ -873,15 +855,74 @@ void findLegalMoves(int x, int y){
 			//Provera u kolonama do
 			for(i = x - 1; i <= x + 1; i+=2){
 				for(j = y - 2 ; j <= y+2; y+=4){
-					if(i > 0 && j > 0 && i < 8 && j < 8){
+					if(i >= 0 && j >= 0 && i < 8 && j < 8){
 						if(!isKingAttacked(i, j,x, y, selected_piece)){
 							if(chessTable[i][j] == 0 || chessTable[i][j]/10 != selected_piece/10)
-								legalMoves[i][i] = 1;
+								legalMoves[i][j] = 1;
 						}	
 					}
 				}
+			}*/
+
+			if(x > 0 && y > 1){
+				if(!isKingAttacked(x-1, y-2, x, y, selected_piece)){
+					if(chessTable[x-1][y-2] == 0 || chessTable[x-1][y-2]/10 != selected_piece/10)
+						legalMoves[x-1][y-2] = 1;
+				}
+			}
+
+			if(x > 0 && y < 6){
+				if(!isKingAttacked(x-1, y+2, x, y, selected_piece)){
+					if(chessTable[x-1][y+2] == 0 || chessTable[x-1][y+2]/10 != selected_piece/10)
+						legalMoves[x-1][y+2] = 1;
+				}
+			}
+
+
+			if(x < 7 && y > 1){
+				if(!isKingAttacked(x+1, y-2, x, y, selected_piece)){
+					if(chessTable[x+1][y-2] == 0 || chessTable[x+1][y-2]/10 != selected_piece/10)
+						legalMoves[x+1][y-2] = 1;
+				}
+			}
+
+			if(x < 7 && y < 6){
+				if(!isKingAttacked(x+1, y+2, x, y, selected_piece)){
+					if(chessTable[x+1][y+2] == 0 || chessTable[x+1][y+2]/10 != selected_piece/10)
+						legalMoves[x+1][y+2] = 1;
+				}
+			}
+
+			if(x > 1 && y > 0){
+				if(!isKingAttacked(x-2, y-1, x, y, selected_piece)){
+					if(chessTable[x-2][y-1] == 0 || chessTable[x-2][y-1]/10 != selected_piece/10)
+						legalMoves[x-2][y-1] = 1;
+				}
+			}
+
+			if(x > 1 && y < 7){
+				if(!isKingAttacked(x-2, y+1, x, y, selected_piece)){
+					if(chessTable[x-2][y+1] == 0 || chessTable[x-2][y+1]/10 != selected_piece/10)
+						legalMoves[x-2][y+1] = 1;
+				}
+			}
+
+
+			if(x < 6 && y > 0){
+				if(!isKingAttacked(x+2, y-1, x, y, selected_piece)){
+					if(chessTable[x+2][y-1] == 0 || chessTable[x+2][y-1]/10 != selected_piece/10)
+						legalMoves[x+2][y-1] = 1;
+				}
+			}
+
+			if(x < 6 && y < 7){
+				if(!isKingAttacked(x+2, y+1, x, y, selected_piece)){
+					if(chessTable[x+2][y+1] == 0 || chessTable[x+2][y+1]/10 != selected_piece/10)
+						legalMoves[x+2][y+1] = 1;
+				}
 			}
 			break;
+
 	}
 	
 	markLegalMoves();
@@ -899,78 +940,10 @@ void markLegalMoves(){
 	}
 }
 
-//function for opening selected field
-// Promena -> selekcija figure
-void openField(int x, int y, char map[9][9]) {
-	int i, j;
-	int x1, y1;
-	x1 = (x - 80) / 16;
-	y1 = (y - 80) / 16;
-
-	switch (map[x1][y1]) {
-	case NUM1:
-		drawMap(16, 0, x - 1, y - 1, 16, 16);
-		if (map != blankMap)
-			blankMap[x1][y1] = NUM1;
-		break;
-
-	case NUM2:
-		drawMap(32, 0, x - 1, y - 1, 16, 16);
-		if (map != blankMap)
-			blankMap[x1][y1] = NUM2;
-		break;
-
-	case NUM3:
-		drawMap(48, 0, x - 1, y - 1, 16, 16);
-		if (map != blankMap)
-			blankMap[x1][y1] = NUM3;
-		break;
-
-	case BLANK:
-		drawMap(0, 0, x - 1, y - 1, 16, 16);
-		if (map != blankMap)
-			blankMap[x1][y1] = BLANK;
-		clean(x1, y1, solvedMap, indicationMap);
-		for (i = 0; i < 9; i++) {
-			for (j = 0; j < 9; j++) {
-				xil_printf("%c", indicationMap[i][j]);
-			}
-			xil_printf("\n");
-		}
-		break;
-
-	case NUM4:
-		drawMap(64, 0, x - 1, y - 1, 16, 16);
-		if (map != blankMap)
-			blankMap[x1][y1] = NUM4;
-		break;
-
-	case BOMB:
-		if (map != blankMap)
-			blankMap[x1][y1] = BOMB;
-		endOfGame = 1;
-		printOutEndOfGame(blankMap, solvedMap);
-		drawMap(32, 16, x - 1, y - 1, 16, 16);
-		drawMap(77, 54, 120, 54, 27, 26);
-		break;
-	case '@':
-		drawMap(80, 16, x - 1, y - 1, 16, 16);
-		if (map != blankMap)
-			blankMap[x1][y1] = BEG;
-		break;
-
-	case '#':
-		drawMap(64, 16, x - 1, y - 1, 16, 16);
-		if (map != blankMap)
-			blankMap[x1][y1] = FLAG;
-		break;
-	}
-}
-
 
 void initLegalMoves(){
 	int i,j;
-		for (i = 0; i < 6; i++){
+		for (i = 0; i < 8; i++){
 			for(j = 0; j<8; j++){
 				legalMoves[i][j] = 0;
 			}
@@ -991,14 +964,14 @@ void initTableMatrix(){
 	}
 
 	//Namestanje figurica na pocetne polozaje
-	chessTable[6][0]=1;
+	chessTable[6][0]=0;
 	chessTable[6][1]=3;
 	chessTable[6][2]=4;
 	chessTable[6][3]=5;
 	chessTable[6][4]=15;
 	chessTable[6][5]=14;
-	chessTable[6][6]=13;
-	chessTable[6][7]=11;
+	chessTable[6][6]=14;
+	chessTable[6][7]=14;
 
 	chessTable[7][0]=2;
 	chessTable[7][1]=3;
@@ -1009,6 +982,9 @@ void initTableMatrix(){
 	chessTable[7][6]=13;
 	chessTable[7][7]=12;
 	
+
+	chessTable[3][5] = 1;
+	chessTable[4][3] = 11;
 }
 
 void drawTable(){
@@ -1371,7 +1347,7 @@ void move() {
 					}*/
 					if(mode == NONE_PICKED){
 						mode = FIGURE_SELECTED;
-						findLegalMoves(x, y);
+						findLegalMoves(y, x);
 					}
 					else if(mode == FIGURE_SELECTED){
 						mode = NONE_PICKED;
