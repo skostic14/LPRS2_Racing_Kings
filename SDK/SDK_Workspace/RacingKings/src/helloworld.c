@@ -1223,8 +1223,15 @@ void drawingCursor(int startX, int startY, int endX, int endY, int mod) {
 		for (y = startY; y < startY + 2; y++) {
 			i = y * 320 + x;
 			VGA_PERIPH_MEM_mWriteMemory(
+			if (mod == 0)
 					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_CURSOR);
+			else if (mod == 2)
+					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+							+ i * 4, COL_CURSOR_SELECT);
+			else 
+					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+							+ i * 4, COL_LEGAL_MOVE);
 		}
 	}
 
@@ -1232,8 +1239,16 @@ void drawingCursor(int startX, int startY, int endX, int endY, int mod) {
 		for (y = endY - 2; y < endY; y++) {
 			i = y * 320 + x;
 			VGA_PERIPH_MEM_mWriteMemory(
+			if (mod == 0)
 					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_CURSOR);
+			else if (mod == 2)
+					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+							+ i * 4, COL_CURSOR_SELECT);
+			else 
+					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+							+ i * 4, COL_LEGAL_MOVE);
+
 		}
 	}
 
@@ -1241,8 +1256,16 @@ void drawingCursor(int startX, int startY, int endX, int endY, int mod) {
 		for (y = startY; y < endY; y++) {
 			i = y * 320 + x;
 			VGA_PERIPH_MEM_mWriteMemory(
+			if (mod == 0)
 					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_CURSOR);
+			else if (mod == 2)
+					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+							+ i * 4, COL_CURSOR_SELECT);
+			else 
+					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+							+ i * 4, COL_LEGAL_MOVE);
+
 		}
 	}
 
@@ -1250,8 +1273,16 @@ void drawingCursor(int startX, int startY, int endX, int endY, int mod) {
 		for (y = startY; y < endY; y++) {
 			i = y * 320 + x;
 			VGA_PERIPH_MEM_mWriteMemory(
+			if (mod == 0)
 					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_CURSOR);
+			else if (mod == 2)
+					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+							+ i * 4, COL_CURSOR_SELECT);
+			else 
+					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+							+ i * 4, COL_LEGAL_MOVE);
+
 		}
 	}
 
