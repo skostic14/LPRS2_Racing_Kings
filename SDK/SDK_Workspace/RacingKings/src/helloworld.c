@@ -52,16 +52,6 @@
 #define CENTER 0b00010000
 #define SW0 0b00000001
 #define SW1 0b00000010
-#define BOMB '*'
-#define NUM1 '1'
-#define NUM2 '2'
-#define NUM3 '3'
-#define NUM4 '4'
-#define BLANK '0'
-#define FLAG '#'
-#define NUMOFMINES 9
-//BEG---unpened field
-#define BEG '@'
 #define COL_WHITE 0b011010000
 #define COL_BLACK 0b111110100
 #define COL_CURSOR 0b000000000
@@ -91,7 +81,7 @@ static char legalMoves[8][8];
 //Rekonfigurisati da ispise ko je pobedio
 
 void printOutEndOfGame(char blankTable[SIZE][SIZE], char solvedMap[SIZE][SIZE]) {
-	int i, j, ii, jj;
+	/*int i, j, ii, jj;
 	for (i = 0; i < SIZE; i++) {
 		for (j = 0; j < SIZE; j++) {
 			ii = (i * 16) + 80;
@@ -104,29 +94,7 @@ void printOutEndOfGame(char blankTable[SIZE][SIZE], char solvedMap[SIZE][SIZE]) 
 				drawMap(0, 16, ii, jj, 16, 16);
 			}
 		}
-	}
-}
-
-//when the blank field is pressed, open all blank fields around it
-// OBRISATI
-void clean(int x, int y, char resultTable[SIZE][SIZE],
-		char indicationMap[SIZE][SIZE]) {
-	int i, j;
-
-	indicationMap[x][y] = 'x';
-
-	if (resultTable[x][y] == BLANK) {
-		for (i = x - 1; i <= x + 1; i++) {
-			for (j = y - 1; j <= y + 1; j++) {
-				if (i >= 0 && j >= 0 && i < 9 && j < 9 && !(x == i && y == j)) {
-					if (indicationMap[i][j] == BLANK) {
-						clean(i, j, resultTable, indicationMap);
-					}
-				}
-
-			}
-		}
-	}
+	}*/
 }
 
 //(x,y) - nove koordinate figure
@@ -526,8 +494,6 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 				if(tempTable[i][j] == 15)
 					return 1;
 			}
-			else
-				break;
 		}
 	}
 
@@ -537,8 +503,6 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 				if(tempTable[i][j] == 5)
 					return 1;
 			}
-			else
-				break;
 		}
 	}
 
@@ -549,8 +513,6 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 				if(tempTable[i][j] == 15)
 					return 1;
 			}
-			else
-				break;
 		}
 	}
 
@@ -560,8 +522,6 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 				if(tempTable[i][j] == 5)
 					return 1;
 			}
-			else
-				break;
 		}
 	}
 
@@ -839,30 +799,6 @@ void findLegalMoves(int x, int y){
 			
 		//Skakac
 		case 5:
-			//Provera u redu ispod/iznad
-			/*for(i = x - 2; i <= x+2; i+=4){
-				for(j = y - 1 ; j <= y+1; y+=2){
-					if(i >= 0 && j >= 0 && i < 8 && j < 8){
-						if(!isKingAttacked(i, j,x, y, selected_piece)){
-							if(chessTable[i][j] == 0 || chessTable[i][j]/10 != selected_piece/10)
-								legalMoves[i][j] = 1;
-						}
-							
-					}
-				}
-			}
-			
-			//Provera u kolonama do
-			for(i = x - 1; i <= x + 1; i+=2){
-				for(j = y - 2 ; j <= y+2; y+=4){
-					if(i >= 0 && j >= 0 && i < 8 && j < 8){
-						if(!isKingAttacked(i, j,x, y, selected_piece)){
-							if(chessTable[i][j] == 0 || chessTable[i][j]/10 != selected_piece/10)
-								legalMoves[i][j] = 1;
-						}	
-					}
-				}
-			}*/
 
 			if(x > 0 && y > 1){
 				if(!isKingAttacked(x-1, y-2, x, y, selected_piece)){
@@ -964,14 +900,14 @@ void initTableMatrix(){
 	}
 
 	//Namestanje figurica na pocetne polozaje
-	chessTable[6][0]=0;
+	chessTable[6][0]=1;
 	chessTable[6][1]=3;
 	chessTable[6][2]=4;
 	chessTable[6][3]=5;
 	chessTable[6][4]=15;
 	chessTable[6][5]=14;
-	chessTable[6][6]=14;
-	chessTable[6][7]=14;
+	chessTable[6][6]=13;
+	chessTable[6][7]=11;
 
 	chessTable[7][0]=2;
 	chessTable[7][1]=3;
@@ -982,9 +918,6 @@ void initTableMatrix(){
 	chessTable[7][6]=13;
 	chessTable[7][7]=12;
 	
-
-	chessTable[3][5] = 1;
-	chessTable[4][3] = 11;
 }
 
 void drawTable(){
@@ -1068,102 +1001,6 @@ void drawBackground(){
 
 }
 
-//function that generates random game map
-void makeTable(char temp[9][9]) {
-	int numOfMines = NUMOFMINES, row, column, i, j, m, surroundingMines = 0;
-	char table[9][9];
-
-	srand(randomCounter);
-
-	//popunjava matricu nulama
-	for (i = 0; i < 9; i++) {
-		for (j = 0; j < 9; j++) {
-			table[i][j] = BLANK;
-		}
-	}
-
-	//postavlja random mine
-	while (numOfMines > 0) {
-		row = rand() % 9;
-		column = rand() % 9;
-		if (table[row][column] == BLANK) {
-			table[row][column] = BOMB;
-			numOfMines--;
-		}
-
-	}
-
-	//proverava poziciju mina i ispisuje brojeve na odg mesta
-	for (i = 0; i < 9; i++) {
-		for (j = 0; j < 9; j++) {
-			surroundingMines = 0;
-			if (table[i][j] != BOMB) {
-				if (i > 0 && j > 0) {
-					if (table[i - 1][j - 1] == BOMB)
-						surroundingMines++;
-				}
-				if (j > 0) {
-					if (table[i][j - 1] == BOMB)
-						surroundingMines++;
-				}
-				if (i < 9 - 1 && j > 0) {
-					if (table[i + 1][j - 1] == BOMB)
-						surroundingMines++;
-				}
-				if (i > 0) {
-					if (table[i - 1][j] == BOMB)
-						surroundingMines++;
-				}
-				if (i < 9 - 1) {
-					if (table[i + 1][j] == BOMB)
-						surroundingMines++;
-				}
-				if (i > 0 && j < 9 - 1) {
-					if (table[i - 1][j + 1] == BOMB)
-						surroundingMines++;
-				}
-				if (j < 9 - 1) {
-					if (table[i][j + 1] == BOMB)
-						surroundingMines++;
-				}
-				if (i < 9 - 1 && j < 9 - 1) {
-					if (table[i + 1][j + 1] == BOMB)
-						surroundingMines++;
-				}
-				table[i][j] = surroundingMines + '0';
-			}
-		}
-
-	}
-
-	//for testing
-
-	for (i = 0; i < 9; i++) {
-		for (j = 0; j < 9; j++) {
-			xil_printf("%c", table[i][j]);
-		}
-		xil_printf("\n");
-	}
-
-	for (i = 0; i < 9; i++) {
-		for (j = 0; j < 9; j++) {
-			temp[i][j] = table[j][i];
-
-		}
-	}
-
-	xil_printf("\n");
-
-	for (i = 0; i < 9; i++) {
-		for (j = 0; j < 9; j++) {
-			xil_printf("%c", temp[j][i]);
-		}
-		xil_printf("\n");
-	}
-
-}
-
-
 //extracting pixel data from a picture for printing out on the display
 
 void drawMap(int in_x, int in_y, int out_x, int out_y, int width, int height) {
@@ -1198,15 +1035,14 @@ void drawingCursor(int startX, int startY, int endX, int endY, int mod) {
 	for (x = startX; x < endX; x++) {
 		for (y = startY; y < startY + 2; y++) {
 			i = y * 320 + x;
-			VGA_PERIPH_MEM_mWriteMemory(
 			if (mod == 0)
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_CURSOR);
 			else if (mod == 2)
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_CURSOR_SELECT);
 			else 
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_LEGAL_MOVE);
 		}
 	}
@@ -1214,15 +1050,14 @@ void drawingCursor(int startX, int startY, int endX, int endY, int mod) {
 	for (x = startX; x < endX; x++) {
 		for (y = endY - 2; y < endY; y++) {
 			i = y * 320 + x;
-			VGA_PERIPH_MEM_mWriteMemory(
 			if (mod == 0)
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_CURSOR);
 			else if (mod == 2)
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_CURSOR_SELECT);
 			else 
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_LEGAL_MOVE);
 
 		}
@@ -1231,15 +1066,14 @@ void drawingCursor(int startX, int startY, int endX, int endY, int mod) {
 	for (x = startX; x < startX + 2; x++) {
 		for (y = startY; y < endY; y++) {
 			i = y * 320 + x;
-			VGA_PERIPH_MEM_mWriteMemory(
 			if (mod == 0)
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_CURSOR);
 			else if (mod == 2)
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_CURSOR_SELECT);
 			else 
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_LEGAL_MOVE);
 
 		}
@@ -1248,15 +1082,14 @@ void drawingCursor(int startX, int startY, int endX, int endY, int mod) {
 	for (x = endX - 2; x < endX; x++) {
 		for (y = startY; y < endY; y++) {
 			i = y * 320 + x;
-			VGA_PERIPH_MEM_mWriteMemory(
 			if (mod == 0)
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_CURSOR);
 			else if (mod == 2)
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_CURSOR_SELECT);
 			else 
-					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+				VGA_PERIPH_MEM_mWriteMemory(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
 							+ i * 4, COL_LEGAL_MOVE);
 
 		}
@@ -1417,30 +1250,10 @@ void move() {
 
 int main() {
 
-	int j, p, r;
-	inc1 = 0;
-	inc2 = 0;
-	numOfFlags = NUMOFMINES;
-	flagTrue = 0;
-	numOfMines = NUMOFMINES;
-	firstTimeCenter = 0;
 
 	init_platform();
 
 
-	//helping map for cleaning the table when blank button is pressed
-	for (p = 0; p < SIZE; p++) {
-		for (r = 0; r < SIZE; r++) {
-			indicationMap[p][r] = BLANK;
-		}
-	}
-
-	//map which contains all the moves of the player
-	for (i = 0; i < 9; i++) {
-		for (j = 0; j < 9; j++) {
-			blankMap[i][j] = BEG;
-		}
-	}
 
 	VGA_PERIPH_MEM_mWriteMemory(
 			XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + 0x00, 0x0); // direct mode   0
@@ -1473,31 +1286,6 @@ int main() {
 	initTableMatrix();
 	drawTable();
 	move();
-
-	/*while(1){
-		//drawBackground();
-		drawingCursor(79, 20, 98, 45);
-
-	}*/
-
-	/*//drawing a map
-	for (kolona = 0; kolona < 9; kolona++) {
-		for (red = 0; red < 9; red++) {
-			drawMap(80, 16, 80 + red * 16, 80 + kolona * 16, 16, 16);
-		}
-	}
-
-	//smiley
-	drawMap(0, 55, 120, 54, 27, 26);
-
-	//flag
-	drawMap(65, 17, 154, 60, 13, 13);
-
-	//counter
-	drawMap(116, 32, 168, 54, 14, 23);
-
-	//moving through the table
-	move();*/
 
 
 	cleanup_platform();
