@@ -85,6 +85,7 @@ char blankMap[9][9];
 char indicationMap[9][9];
 
 static char chessTable[8][8];
+static char legalMoves[8][8];
 
 //end of game
 //Rekonfigurisati da ispise ko je pobedio
@@ -567,15 +568,11 @@ int isKingAttacked(int x, int y, int z, int u, char figure){
 	return 0;
 }
 
-void findLegalMoves(int x, int y, char legalMoves[8][8]){
+void findLegalMoves(int x, int y){
 
 	int i, j;
 	
 	char selected_piece = chessTable[x][y];
-	for (i = 0; i < 8; i ++){
-		for (j = 0; j < 8; j++)
-			legalMoves[i][j] = 0;
-	}
 	switch (selected_piece % 10){
 		//Kralj
 		case 1:
@@ -887,16 +884,16 @@ void findLegalMoves(int x, int y, char legalMoves[8][8]){
 			break;
 	}
 	
-	markLegalMoves(legalMoves);
+	markLegalMoves();
 
 }
 
-void markLegalMoves(char legalMoves[8][8]){
+void markLegalMoves(){
 	int i,j;
 	for (i = 0; i < 8; i++){
 		for (j = 0; j < 8; j++){
 			if (legalMoves[i][j] == 1){
-				drawingCursor(79 + j * 19, 20 + i * 25, 97 + j * 19, 44 + i * 25, 1);
+				drawingCursor(79 + j * 19, 20 + i * 25, 98 + j * 19, 45 + i * 25, 1);
 			}
 		}
 	}
@@ -971,6 +968,16 @@ void openField(int x, int y, char map[9][9]) {
 }
 
 
+void initLegalMoves(){
+	int i,j;
+		for (i = 0; i < 6; i++){
+			for(j = 0; j<8; j++){
+				legalMoves[i][j] = 0;
+			}
+		}
+
+}
+
 void initTableMatrix(){
 	
 	//Polja se namestaju sa leva na desno, od gore ka dole
@@ -979,6 +986,7 @@ void initTableMatrix(){
 	for (i = 0; i < 6; i++){
 		for(j = 0; j<8; j++){
 			chessTable[i][j] = 0;
+			legalMoves[i][j] = 0;
 		}
 	}
 
@@ -1255,12 +1263,18 @@ void move() {
 
 	int startX = 79, startY = 20, endX = 98, endY = 45;
 	int oldStartX, oldStartY, oldEndX, oldEndY;
-	int x, y, ic, ib, i, j;
+	int x = 0, y = 0, ic, ib, i, j;
 	int prethodnoStanje;
 	typedef enum {
 		NOTHING_PRESSED, SOMETHING_PRESSED
 	} btn_state_t;
 	btn_state_t btn_state = NOTHING_PRESSED;
+
+	typedef enum{
+		NONE_PICKED, FIGURE_SELECTED
+	} pick_mode;
+
+	pick_mode mode = NONE_PICKED;
 
 	//makeTable(solvedMap);
 	drawingCursor(startX, startY, endX, endY, 0);
@@ -1269,12 +1283,14 @@ void move() {
 		if (btn_state == NOTHING_PRESSED) {
 			btn_state = SOMETHING_PRESSED;
 			drawingCursor(startX, startY, endX, endY, 0);
+			markLegalMoves();
 			if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & DOWN) == 0) {
 				if (endY < 196) {
 					oldStartY = startY;
 					oldEndY = endY;
 					startY += 25;
 					endY += 25;
+					y++;
 					//drawingCursor(startX, startY, endX, endY);
 					//openField(startX, oldStartY, blankMap);
 				}
@@ -1287,6 +1303,7 @@ void move() {
 					oldStartX = startX;
 					startX += 19;
 					endX += 19;
+					x++;
 					//drawingCursor(startX, startY, endX, endY);
 					//openField(oldStartX, startY, blankMap);
 
@@ -1296,6 +1313,7 @@ void move() {
 					oldStartX = startX;
 					startX -= 19;
 					endX -= 19;
+					x--;
 					//drawingCursor(startX, startY, endX, endY);
 					//openField(oldStartX, startY, blankMap);
 				}
@@ -1305,13 +1323,14 @@ void move() {
 					oldStartY = startY;
 					startY -= 25;
 					endY -= 25;
+					y--;
 					//drawingCursor(startX, startY, endX, endY);
 					//openField(startX, oldStartY, blankMap);
 				}
-/*
+
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & CENTER)
 					== 0) {
-				int m = (startX - 80) / 16;
+				/*int m = (startX - 80) / 16;
 				int n = (startY - 80) / 16;
 				firstTimeCenter++;
 				if (firstTimeCenter == 1) {
@@ -1349,124 +1368,29 @@ void move() {
 								blankMap[i][j] = NUM4;
 							}
 						}
+					}*/
+					if(mode == NONE_PICKED){
+						mode = FIGURE_SELECTED;
+						findLegalMoves(x, y);
 					}
-				}
-
-			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & SW0) != 0) { //flag
-
-				if (numOfFlags > 0 && numOfFlags <= NUMOFMINES) {
-					int x = (startX - 80) / 16;
-					int y = (startY - 80) / 16;
-					if (blankMap[x][y] != FLAG && blankMap[x][y] == BEG) {
-						drawMap(64, 16, startX - 1, startY - 1, 16, 16);
-
-						blankMap[x][y] = FLAG;
-
-						numOfFlags--;
-						//checks if the flag is in the right place
-						if (solvedMap[x][y] == BOMB) {
-							flagTrue++;
-							if (flagTrue == NUMOFMINES) {
-
-								endOfGame = 1;
-								drawMap(103, 54, 120, 54, 27, 26);
-							}
-						}
-
-					}
-					//prints out flag counter
-					switch (numOfFlags) {
-					case 9:
-						drawMap(116, 32, 168, 54, 13, 23);
-						break;
-					case 8:
-						drawMap(103, 32, 168, 54, 13, 23);
-						break;
-					case 7:
-						drawMap(90, 32, 168, 54, 13, 23);
-						break;
-					case 6:
-						drawMap(77, 32, 168, 54, 13, 23);
-						break;
-					case 5:
-						drawMap(64, 32, 168, 54, 14, 23);
-						break;
-					case 4:
-						drawMap(51, 32, 168, 54, 13, 23);
-						break;
-					case 3:
-						drawMap(38, 32, 168, 54, 13, 23);
-						break;
-					case 2:
-						drawMap(25, 32, 168, 54, 13, 23);
-						break;
-					case 1:
-						drawMap(13, 32, 168, 54, 13, 23);
-						break;
-					case 0:
-						drawMap(0, 32, 168, 54, 13, 23);
-						break;
-
+					else if(mode == FIGURE_SELECTED){
+						mode = NONE_PICKED;
+						initLegalMoves();
 					}
 
 				}
-			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & SW1) != 0) {
-				if (numOfFlags < NUMOFMINES) {
 
-					int x = (startX - 80) / 16;
-					int y = (startY - 80) / 16;
-					if (blankMap[x][y] == FLAG) {
-						drawMap(80, 16, startX - 1, startY - 1, 16, 16);
-
-						blankMap[x][y] = BEG;
-
-						numOfFlags++;
-
-						if (solvedMap[x][y] == BOMB) {
-							flagTrue--;
-						}
-
-						switch (numOfFlags) {
-						case 9:
-							drawMap(116, 32, 168, 54, 13, 23);
-							break;
-						case 8:
-							drawMap(103, 32, 168, 54, 13, 23);
-							break;
-						case 7:
-							drawMap(90, 32, 168, 54, 13, 23);
-							break;
-						case 6:
-							drawMap(77, 32, 168, 54, 13, 23);
-							break;
-						case 5:
-							drawMap(64, 32, 168, 54, 13, 23);
-							break;
-						case 4:
-							drawMap(51, 32, 168, 54, 13, 23);
-							break;
-						case 3:
-							drawMap(38, 32, 168, 54, 13, 23);
-							break;
-						case 2:
-							drawMap(25, 32, 168, 54, 13, 23);
-							break;
-						case 1:
-							drawMap(13, 32, 168, 54, 13, 23);
-							break;
-						case 0:
-							drawMap(0, 32, 168, 54, 13, 23);
-							break;
-						}
-					}
-				}
-*/
-			} else {
+			 else {
 				btn_state = NOTHING_PRESSED;
 			}
-		} else { // SOMETHING_PRESSED
-			drawBackground();
-			drawingCursor(startX, startY, endX, endY, 0);
+		}
+		 else { // SOMETHING_PRESSED
+
+			if((oldStartX != startX) || (oldStartY != startY)){
+				drawingCursor(startX, startY, endX, endY, 0);
+				drawBackground();
+			}
+
 			if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & DOWN) == 0) {
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & RIGHT) == 0) {
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & LEFT) == 0) {
