@@ -40,61 +40,31 @@
 #include "xio.h"
 #include "xil_exception.h"
 #include "vga_periph_mem.h"
-#include "minesweeper_sprites.h"
 #include "sprites_green.c"
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>
-#define SIZE 9
 #define UP 0b01000000
 #define DOWN 0b00000100
 #define LEFT 0b00100000
 #define RIGHT 0b00001000
 #define CENTER 0b00010000
-#define SW0 0b00000001
-#define SW1 0b00000010
 #define COL_WHITE 0b011010000
 #define COL_BLACK 0b111110100
 #define COL_CURSOR 0b000000000
 #define COL_CURSOR_SELECT 0b111000000
 #define COL_LEGAL_MOVE 0b000111000
 
-int endOfGame;
-int inc1;
-int inc2;
-int i, x, y, ii, oi, R, G, B, RGB, kolona, red, RGBgray;
-int numOfFlags;
-int flagTrue;
-int randomCounter = 50;
-int numOfMines;
-int firstTimeCenter;
-//map that is hidden from the user-it contains the solution
-char solvedMap[9][9];
-//map that has all of player's moves
-char blankMap[9][9];
-//map used for opening the blank fields that surround blank field selected
-char indicationMap[9][9];
+int i, ii, oi, R, G, B, RGB, x, y;
 
 static char chessTable[8][8];
 static char legalMoves[8][8];
+static int cursor_x = 0;
+static int cursor_y = 0;
 
 //end of game
-//Rekonfigurisati da ispise ko je pobedio
 
-void printOutEndOfGame(char blankTable[SIZE][SIZE], char solvedMap[SIZE][SIZE]) {
-	/*int i, j, ii, jj;
-	for (i = 0; i < SIZE; i++) {
-		for (j = 0; j < SIZE; j++) {
-			ii = (i * 16) + 80;
-			jj = (j * 16) + 80;
-			if (blankTable[i][j] == FLAG) {
-				if (solvedMap[i][j] != BOMB) {
-					drawMap(16, 16, ii, jj, 16, 16);
-				}
-			} else if (blankTable[i][j] != FLAG && solvedMap[i][j] == BOMB) {
-				drawMap(0, 16, ii, jj, 16, 16);
-			}
-		}
-	}*/
+void printOutEndOfGame(int who_won) {
+
 }
 
 //(x,y) - nove koordinate figure
@@ -870,7 +840,10 @@ void markLegalMoves(){
 	for (i = 0; i < 8; i++){
 		for (j = 0; j < 8; j++){
 			if (legalMoves[i][j] == 1){
-				drawingCursor(79 + j * 19, 20 + i * 25, 98 + j * 19, 45 + i * 25, 1);
+				if(cursor_y == i && cursor_x == j)
+					drawingCursor(79 + j * 19, 20 + i * 25, 98 + j * 19, 45 + i * 25, 2);
+				else
+					drawingCursor(79 + j * 19, 20 + i * 25, 98 + j * 19, 45 + i * 25, 1);
 			}
 		}
 	}
@@ -1102,9 +1075,10 @@ void drawingCursor(int startX, int startY, int endX, int endY, int mod) {
 void move() {
 
 	int startX = 79, startY = 20, endX = 98, endY = 45;
-	int oldStartX, oldStartY, oldEndX, oldEndY;
-	int x = 0, y = 0, ic, ib, i, j;
+	int oldStartX, oldStartY, oldEndX, oldEndY, fromX, fromY;
+	int ic, ib, i, j;
 	int prethodnoStanje;
+	char figure = 0;
 	typedef enum {
 		NOTHING_PRESSED, SOMETHING_PRESSED
 	} btn_state_t;
@@ -1114,15 +1088,23 @@ void move() {
 		NONE_PICKED, FIGURE_SELECTED
 	} pick_mode;
 
-	pick_mode mode = NONE_PICKED;
+	typedef enum{
+		WHITE, BLACK, EOG
+	} player_turn;
 
-	//makeTable(solvedMap);
+	pick_mode mode = NONE_PICKED;
+	player_turn player = WHITE;
+	cursor_x = 0;
+	cursor_y = 0;
 	drawingCursor(startX, startY, endX, endY, 0);
 
-	while (endOfGame != 1) {
+	while (1) {
 		if (btn_state == NOTHING_PRESSED) {
 			btn_state = SOMETHING_PRESSED;
-			drawingCursor(startX, startY, endX, endY, 0);
+			if(legalMoves[cursor_y][cursor_x] == 0)
+				drawingCursor(startX, startY, endX, endY, 0);
+			else if(legalMoves[cursor_y][cursor_x] == 1)
+				drawingCursor(startX, startY, endX, endY, 2);
 			markLegalMoves();
 			if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & DOWN) == 0) {
 				if (endY < 196) {
@@ -1130,22 +1112,17 @@ void move() {
 					oldEndY = endY;
 					startY += 25;
 					endY += 25;
-					y++;
-					//drawingCursor(startX, startY, endX, endY);
-					//openField(startX, oldStartY, blankMap);
+					cursor_y++;
 				}
 
 			}
 
 			else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & RIGHT) == 0) {
-				//randomCounter++;
 				if (endX < 213) {
 					oldStartX = startX;
 					startX += 19;
 					endX += 19;
-					x++;
-					//drawingCursor(startX, startY, endX, endY);
-					//openField(oldStartX, startY, blankMap);
+					cursor_x++;
 
 				}
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & LEFT) == 0) {
@@ -1153,9 +1130,7 @@ void move() {
 					oldStartX = startX;
 					startX -= 19;
 					endX -= 19;
-					x--;
-					//drawingCursor(startX, startY, endX, endY);
-					//openField(oldStartX, startY, blankMap);
+					cursor_x--;
 				}
 
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & UP) == 0) {
@@ -1163,59 +1138,62 @@ void move() {
 					oldStartY = startY;
 					startY -= 25;
 					endY -= 25;
-					y--;
-					//drawingCursor(startX, startY, endX, endY);
-					//openField(startX, oldStartY, blankMap);
+					cursor_y--;
 				}
 
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & CENTER)
 					== 0) {
-				/*int m = (startX - 80) / 16;
-				int n = (startY - 80) / 16;
-				firstTimeCenter++;
-				if (firstTimeCenter == 1) {
-					randomCounter++;
-					while (solvedMap[m][n] == BOMB)
-						makeTable(solvedMap);
-				}
-				openField(startX, startY, solvedMap);
-				int ii = 0, jj = 0;
 
-				for (i = 0; i < SIZE; i++) {
-					for (j = 0; j < SIZE; j++) {
-						if (indicationMap[i][j] == 'x') {
-							ii = (i * 16) + 80;
-							jj = (j * 16) + 80;
-
-							if (solvedMap[i][j] == BLANK) {
-								drawMap(0, 0, ii, jj, 16, 16);
-								blankMap[i][j] = BLANK;
-							}
-							if (solvedMap[i][j] == NUM2) {
-								drawMap(32, 0, ii, jj, 16, 16);
-								blankMap[i][j] = NUM2;
-							}
-							if (solvedMap[i][j] == NUM1) {
-								drawMap(16, 0, ii, jj, 16, 16);
-								blankMap[i][j] = NUM1;
-							}
-							if (solvedMap[i][j] == NUM3) {
-								drawMap(48, 0, ii, jj, 16, 16);
-								blankMap[i][j] = NUM3;
-							}
-							if (solvedMap[i][j] == NUM4) {
-								drawMap(64, 0, ii, jj, 16, 16);
-								blankMap[i][j] = NUM4;
+					if(mode == NONE_PICKED){
+						if(player == WHITE){
+							if(chessTable[cursor_y][cursor_x]/10 == 0 && chessTable[cursor_y][cursor_x] != 0){
+								mode = FIGURE_SELECTED;
+								figure = chessTable[cursor_y][cursor_x];
+								fromX = cursor_x;
+								fromY = cursor_y;
+								initLegalMoves();
+								findLegalMoves(cursor_y, cursor_x);
 							}
 						}
-					}*/
-					if(mode == NONE_PICKED){
-						mode = FIGURE_SELECTED;
-						findLegalMoves(y, x);
+						else if(player == BLACK){
+							if(chessTable[cursor_y][cursor_x]/10 == 1 && chessTable[cursor_y][cursor_x] != 0){
+								mode = FIGURE_SELECTED;
+								figure = chessTable[cursor_y][cursor_x];
+								fromX = cursor_x;
+								fromY = cursor_y;
+								initLegalMoves();
+								findLegalMoves(cursor_y, cursor_x);
+							}
+						}
+
+						else if(player == EOG){
+							initTableMatrix();
+							player = WHITE;
+						}
 					}
 					else if(mode == FIGURE_SELECTED){
-						mode = NONE_PICKED;
-						initLegalMoves();
+						if(legalMoves[cursor_y][cursor_x] == 1){
+							mode = NONE_PICKED;
+							chessTable[cursor_y][cursor_x] = figure;
+							chessTable[fromY][fromX] = 0;
+							initLegalMoves();
+							if(player == WHITE)
+								player = BLACK;
+							else if(player == BLACK)
+								player = WHITE;
+
+							int i;
+							for(i = 0; i < 8; i++){
+								if(chessTable[0][i]%10 == 1){
+									player = EOG;
+								}
+							}
+						}
+
+						if(cursor_y == fromY && cursor_x == fromX){
+							mode = NONE_PICKED;
+							initLegalMoves();
+						}
 					}
 
 				}
@@ -1236,10 +1214,8 @@ void move() {
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & LEFT) == 0) {
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & UP) == 0) {
 			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & CENTER)
-					== 0) {
-			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & SW0) != 0) {
-			} else if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & SW1) != 0) {
-			} else {
+					== 0) {}
+			 else {
 				btn_state = NOTHING_PRESSED;
 			}
 		}
