@@ -63,9 +63,20 @@ static int cursor_y = 0;
 
 //end of game
 
-void printOutEndOfGame(int who_won) {
-
+void printOutEndOfGame() {
+	drawMap(0, 69, 16, 100, 41, 5);
+	drawMap(51, 69, 15, 110, 44, 5);
+	drawMap(57, 75, 18, 117, 38, 5);
+	for (x = 202; x < 227; x++) {
+		for (y = 10; y < 20; y++) {
+			i = y * 320 + x;
+			VGA_PERIPH_MEM_mWriteMemory(
+					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+							+ i * 4, 0b110110110);
+		}
+	}
 }
+
 
 //(x,y) - nove koordinate figure
 //(y,z) - stare koordinate figure
@@ -891,6 +902,9 @@ void initTableMatrix(){
 	chessTable[7][6]=13;
 	chessTable[7][7]=12;
 	
+	drawMap(0, 75, 175, 10, 24, 8);
+	drawMap(60, 50, 202, 10, 24, 8);
+
 }
 
 void drawTable(){
@@ -916,9 +930,27 @@ void drawBackground(){
 	int y;
 	int i;
 	int j;
-	set_cursor(5*320+112);
-	unsigned char natpis[] = "RACING KINGS";
-	print_string(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR, natpis, 12);
+
+
+	//Obrisi da bi dobio prazno mesto za White i Black
+	for (x = 175; x < 200; x++) {
+		for (y = 10; y < 20; y++) {
+			i = y * 320 + x;
+			VGA_PERIPH_MEM_mWriteMemory(
+					XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+							+ i * 4, 0b110110110);
+		}
+	}
+
+	//Obrisi da bi dobio prazno mesto za Game over
+		for (x = 15; x < 59; x++) {
+			for (y = 100; y < 150; y++) {
+				i = y * 320 + x;
+				VGA_PERIPH_MEM_mWriteMemory(
+						XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR + GRAPHICS_MEM_OFF
+								+ i * 4, 0b110110110);
+			}
+		}
 
 	for(i = 0; i < 8; i++){
 		for(j = 0; j < 8; j++){
@@ -935,17 +967,6 @@ void drawBackground(){
 			}
 		}
 	}
-
-	for(i=0; i<8; i++){
-		set_cursor(460*640+137+50*i);
-		print_char(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR, 'A'+i);
-	}
-
-	for(i=0; i<8; i++){
-		set_cursor((57+50*i)*640+524);
-		print_char(XPAR_VGA_PERIPH_MEM_0_S_AXI_MEM0_BASEADDR, '8'-i);
-	}
-
 
 	drawMap(0, 50, 79, 10, 60, 8);
 
@@ -1105,6 +1126,8 @@ void move() {
 				drawingCursor(startX, startY, endX, endY, 0);
 			else if(legalMoves[cursor_y][cursor_x] == 1)
 				drawingCursor(startX, startY, endX, endY, 2);
+
+
 			markLegalMoves();
 			if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & DOWN) == 0) {
 				if (endY < 196) {
@@ -1207,6 +1230,21 @@ void move() {
 			if((oldStartX != startX) || (oldStartY != startY)){
 				drawingCursor(startX, startY, endX, endY, 0);
 				drawBackground();
+					switch(player){
+						case WHITE:
+							drawMap(0, 75, 175 ,10, 24, 8);
+							drawMap(60, 50, 202, 10, 24, 8);
+							break;
+
+						case BLACK:
+							drawMap(28, 75, 175, 10, 24, 8);
+							drawMap(60, 50, 202, 10, 24, 8);
+							break;
+
+						case EOG:
+							printOutEndOfGame();
+
+				}
 			}
 
 			if ((Xil_In32(XPAR_MY_PERIPHERAL_0_BASEADDR) & DOWN) == 0) {
